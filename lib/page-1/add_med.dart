@@ -173,15 +173,9 @@ class _AddMedsPageState extends State<AddMedsPage> {
                             image: _selectedImage,
                             time: _selectedTime!));
 
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ConfigMedsPage(
-                                    medicationData: widget.medicationData,
-                                  )),
-                        ).then((_) {
-                          setState(() {});
-                        });
+                        Navigator.pop(
+                          context,widget.medicationData);
+                          
                       }
                     },
                     child: Text('Save'),

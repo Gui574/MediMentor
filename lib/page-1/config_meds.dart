@@ -17,7 +17,7 @@ class ConfigMedsPage extends StatefulWidget {
 
 class _ConfigMedsPageState extends State<ConfigMedsPage> {
   DateTime selectedDate = DateTime.now();
-  bool listUpdated = false;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +27,7 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
       });
     }
 
-    void updateList(value) {
-      setState(() {
-        listUpdated = !listUpdated;
-      });
-    }
+    var filteredList = widget.medicationData.where((data) => data.date == selectedDate).toList();
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 0, 0, 0),
@@ -54,7 +50,7 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                     icon: Icon(Icons.refresh),
                     color: Colors.white,
                     onPressed: () {
-                      updateList;
+                      
                     },
                   ),
                   Text(
@@ -95,7 +91,9 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                         lastDate: DateTime(2030),
                       );
                       if (pickedDate != null && pickedDate != selectedDate) {
+                        filteredList = widget.medicationData.where((data) => data.date == selectedDate).toList();
                         updateDate(pickedDate);
+                        //print(selectedDate);
                       }
                     },
                   ),
@@ -103,76 +101,76 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                  itemCount: widget.medicationData.length,
-                  itemBuilder: (context, index) {
-                    if (widget.medicationData[index].date == selectedDate) {
-                      return SizedBox(
-                        height: 120,
-                        child: Card(
-                          color: Colors.transparent,
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.file(
-                                    widget.medicationData[index].image!,
-                                    width: 100,
-                                    height: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        widget.medicationData[index].name,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        'Dosage: ${widget.medicationData[index].dosage}',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        'Time: ${widget.medicationData[index].time.hour}:${widget.medicationData[index].time.minute}',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+  child: ListView.builder(
+    itemCount: filteredList.length,
+    itemBuilder: (BuildContext context, int index) {
+      return SizedBox(
+        height: 120,
+        child: Card(
+          color: Colors.transparent,
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image.file(
+                    filteredList[index].image!,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        filteredList[index].name,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                      );
-                    }
-                  }),
-            ),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        'Dosage: ${filteredList[index].dosage}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        'Time: ${filteredList[index].time.hour}:${filteredList[index].time.minute}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  ),
+),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => AddMedsPage(
