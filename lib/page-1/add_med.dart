@@ -22,8 +22,10 @@ class Medication {
 
 class AddMedsPage extends StatefulWidget {
   final List<Medication> medicationData;
+  final Function(List<Medication>) onUpdateMedicationData;
 
-  AddMedsPage({required this.medicationData});
+
+  const AddMedsPage({required this.medicationData, required this.onUpdateMedicationData});
 
   @override
   _AddMedsPageState createState() => _AddMedsPageState();
@@ -95,7 +97,7 @@ class _AddMedsPageState extends State<AddMedsPage> {
     return Material(
         child: Stack(
       children: [
-        Scaffold(
+        Scaffold(backgroundColor: Colors.black,
           appBar: AppBar(
             backgroundColor: Color.fromARGB(255, 90, 89, 89),
             title: Text('Add Medication Info'),
@@ -109,8 +111,14 @@ class _AddMedsPageState extends State<AddMedsPage> {
                 children: <Widget>[
                   TextFormField(
                     decoration: InputDecoration(
-                        labelText: 'Medication Name',
-                        border: OutlineInputBorder()),
+                        labelText: 'Nome da Medicação',
+                        labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                        focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 2.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 1.0),
+    ),),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter medication name';
@@ -124,8 +132,14 @@ class _AddMedsPageState extends State<AddMedsPage> {
                   SizedBox(height: 10),
                   TextFormField(
                     decoration: InputDecoration(
-                        labelText: 'Medication Dosage',
-                        border: OutlineInputBorder()),
+                        labelText: 'Dosagem',
+                        labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                        focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 2.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 1.0),
+    ),),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter medication dosage';
@@ -172,9 +186,16 @@ class _AddMedsPageState extends State<AddMedsPage> {
                             date: _selectedDate!,
                             image: _selectedImage,
                             time: _selectedTime!));
+                            widget.onUpdateMedicationData(widget.medicationData);
 
-                        Navigator.pop(
-                          context,widget.medicationData);
+
+                        Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(
+    builder: (context) => ConfigMedsPage(medicationData: widget.medicationData),
+  ),
+);
+
                           
                       }
                     },

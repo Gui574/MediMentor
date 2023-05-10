@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/page-1/config_meds.dart';
 import 'package:myapp/page-1/home_caretaker.dart';
-import 'package:myapp/page-1/frame-460.dart';
+import 'package:myapp/page-1/home_elder.dart';
+import 'add_med.dart';
 import 'login_logic.dart';
 
 class LoginScreen extends StatefulWidget {
-  @override
+  
+  List<Medication> medicationData;
+
+  LoginScreen({
+    Key? key,
+    required this.medicationData,
+  }) : super(key: key);
+  
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -94,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    style: ButtonStyle(
+                    style: ButtonStyle(minimumSize: MaterialStateProperty.all(Size(150, 50)),
                       backgroundColor: MaterialStateProperty.all<Color>(
                           Color.fromARGB(255, 36, 169, 247)),
                     ),
@@ -105,14 +115,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomeCaretaker(),
+                            builder: (context) => ConfigMedsPage(medicationData: widget.medicationData),
                           ),
                         );
                       } else if (result == "elder") {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomeElder(),
+                            builder: (context) => HomeElder(medicationData: widget.medicationData),
                           ),
                         );
                       }

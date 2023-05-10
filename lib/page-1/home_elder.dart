@@ -4,53 +4,44 @@ import 'package:intl/intl.dart';
 import 'add_med.dart';
 import 'login_screen.dart';
 
-class ConfigMedsPage extends StatefulWidget {
-   List<Medication> medicationData;
+class HomeElder extends StatefulWidget {
+  List<Medication> medicationData;
 
-   ConfigMedsPage({
+  HomeElder({
     Key? key,
     required this.medicationData,
   }) : super(key: key);
-
-  @override
-  _ConfigMedsPageState createState() => _ConfigMedsPageState();
+ 
+  _HomeElderState createState() => _HomeElderState();
 }
 
-class _ConfigMedsPageState extends State<ConfigMedsPage> {
+class _HomeElderState extends State<HomeElder> {
   DateTime selectedDate = DateTime.now();
   
-  void updateMedicationData(List<Medication> newData) {
-  setState(() {
-        selectedDate = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
-      });
-}
-
-
   @override
   Widget build(BuildContext context) {
-
-    var filteredList = widget.medicationData.where((data) => data.date == selectedDate).toList();
-
+    // Format the selected date in the desired format
+    List<Medication> filteredList = widget.medicationData.where((data) => data.date == selectedDate).toList();
+    final DateFormat dateFormat = DateFormat('EEEE, dd \'de\' MMMM \'de\' y', 'pt_BR');
+    String formattedDate = dateFormat.format(selectedDate);
+    print(widget.medicationData);
+    setState(() {
+        selectedDate = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
+      });
+    
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 0, 0, 0),
       body: SafeArea(
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               color: Color.fromARGB(255, 90, 89, 89),
               child: Row(
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    color: Colors.white,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
                 
                   Text(
-                    'Configurar de Medicamentos',
+                    'Painel',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -68,44 +59,16 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                 ],
               ),
             ),
-            Container(
-              color: Color.fromARGB(255, 56, 55, 55),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Data: ',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextButton(
-                    child: Text(DateFormat('dd/MM/yyyy').format(selectedDate),
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    onPressed: () async {
-                      final DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: selectedDate,
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2030),
-                      );
-                      if (pickedDate != null && pickedDate != selectedDate) {
-                        filteredList = widget.medicationData.where((data) => data.date == selectedDate).toList();
-                        setState(() {
-                          selectedDate = pickedDate;
-                        });
-                        //print(selectedDate);
-                      }
-                    },
-                  ),
-                ],
+            Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Text(
+              formattedDate,
+              style: TextStyle(color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
+          ),
             Expanded(child:RefreshIndicator(
   child: ListView.builder(
     itemCount: filteredList.length,
@@ -187,29 +150,7 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
     );
   },)
 ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    
-                    Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => AddMedsPage(
-      onUpdateMedicationData: updateMedicationData,
-      medicationData: widget.medicationData,
-    ),
-  ),
-);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(150, 50),
-                  ),
-                  child: Text('+ Adicionar Medicamento'),
-                ),
-              ],
-            ),
+            
             SizedBox(
               height: 50,
             ),
