@@ -7,7 +7,7 @@ import 'package:myapp/utils.dart';
 import 'package:myapp/page-1/config_meds.dart';
 import 'package:myapp/page-1/home_elder.dart';
 import 'package:myapp/page-1/add_med.dart';
-import 'package:myapp/page-1/frame-458.dart';
+import 'package:myapp/page-1/check_meds.dart';
 import 'package:myapp/page-1/home_caretaker.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),
+      home: HomeCaretaker(),
     );
   }
 }
