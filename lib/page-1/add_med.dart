@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myapp/page-1/config_meds.dart';
+import 'package:provider/provider.dart';
 
 class Medication {
   final String name;
@@ -10,23 +11,42 @@ class Medication {
   final DateTime date;
   final File? image;
   final TimeOfDay time;
+  Color color;
 
   Medication(
       {required this.name,
       required this.dosage,
       required this.date,
       required this.image,
+      required this.color,
       required this.time});
+
+  bool equals(Medication med) {
+    if (name == med.name &&
+        dosage == med.dosage &&
+        date == med.date &&
+        image == med.image) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   String get imagePath => image!.path;
 }
 
+class MedicationData extends ChangeNotifier {
+  List<Medication> _medications = [];
+
+  List<Medication> get medications => _medications;
+
+  void addMedication(Medication medication) {
+    _medications.add(medication);
+    notifyListeners();
+  }
+}
+
 class AddMedsPage extends StatefulWidget {
-  final List<Medication> medicationData;
-  final Function(List<Medication>) onUpdateMedicationData;
-
-
-  const AddMedsPage({required this.medicationData, required this.onUpdateMedicationData});
-
   @override
   _AddMedsPageState createState() => _AddMedsPageState();
 }
@@ -38,6 +58,24 @@ class _AddMedsPageState extends State<AddMedsPage> {
   DateTime? _selectedDate;
   File? _selectedImage;
   TimeOfDay? _selectedTime;
+  Color? _medicationColor = Colors.yellow;
+
+  void _addMedication(BuildContext context) {
+    final medicationData = Provider.of<MedicationData>(context, listen: false);
+
+    final medication = Medication(
+        name: _medicationName!,
+        dosage: _medicationDosage!,
+        date: _selectedDate!,
+        color: _medicationColor!,
+        image: _selectedImage,
+        time: _selectedTime!);
+
+    medicationData.addMedication(medication);
+
+    // Navigate back to HomeElder page
+    Navigator.pop(context);
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -97,7 +135,8 @@ class _AddMedsPageState extends State<AddMedsPage> {
     return Material(
         child: Stack(
       children: [
-        Scaffold(backgroundColor: Colors.black,
+        Scaffold(
+          backgroundColor: Colors.black,
           appBar: AppBar(
             backgroundColor: Color.fromARGB(255, 90, 89, 89),
             title: Text('Add Medication Info'),
@@ -111,14 +150,20 @@ class _AddMedsPageState extends State<AddMedsPage> {
                 children: <Widget>[
                   TextFormField(
                     decoration: InputDecoration(
-                        labelText: 'Nome da Medicação',
-                        labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                        focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 2.0),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 1.0),
-    ),),
+                      labelText: 'Nome da Medicação',
+                      labelStyle:
+                          TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            width: 1.0),
+                      ),
+                    ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter medication name';
@@ -132,14 +177,20 @@ class _AddMedsPageState extends State<AddMedsPage> {
                   SizedBox(height: 10),
                   TextFormField(
                     decoration: InputDecoration(
-                        labelText: 'Dosagem',
-                        labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                        focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 2.0),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Color.fromARGB(255, 255, 255, 255), width: 1.0),
-    ),),
+                      labelText: 'Dosagem',
+                      labelStyle:
+                          TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            width: 1.0),
+                      ),
+                    ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter medication dosage';
@@ -180,23 +231,7 @@ class _AddMedsPageState extends State<AddMedsPage> {
                         _formKey.currentState!.save();
                         // save medication info to database
 
-                        widget.medicationData.add(Medication(
-                            name: _medicationName!,
-                            dosage: _medicationDosage!,
-                            date: _selectedDate!,
-                            image: _selectedImage,
-                            time: _selectedTime!));
-                            widget.onUpdateMedicationData(widget.medicationData);
-
-
-                        Navigator.pushReplacement(
-  context,
-  MaterialPageRoute(
-    builder: (context) => ConfigMedsPage(medicationData: widget.medicationData),
-  ),
-);
-
-                          
+                        _addMedication(context);
                       }
                     },
                     child: Text('Save'),

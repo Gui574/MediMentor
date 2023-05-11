@@ -10,18 +10,27 @@ import 'package:myapp/page-1/add_med.dart';
 import 'package:myapp/page-1/frame-458.dart';
 import 'package:myapp/page-1/home_caretaker.dart';
 import 'package:intl/date_symbol_data_local.dart';
-
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
-   await initializeDateFormatting('pt_BR', null);
-  List<Medication> medicationData = []; // initialize an empty list
-  runApp(MyApp(medicationData: medicationData));
+  await initializeDateFormatting('pt_BR', null);
+  //List<Medication> medicationData = []; // initialize an empty list
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => MedicationData(),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  final List<Medication> medicationData;
-
-  const MyApp({Key? key, required this.medicationData}) : super(key: key);
+  const MyApp({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +39,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(medicationData: medicationData,),
+      home: LoginScreen(),
     );
   }
 }
