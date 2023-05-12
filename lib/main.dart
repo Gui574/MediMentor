@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Medication App',
+      title: 'MediMentor',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

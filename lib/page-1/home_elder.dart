@@ -112,6 +112,7 @@ class _HomeElderState extends State<HomeElder> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  Spacer(),
                   IconButton(
                       onPressed: () {
                         Navigator.push(
@@ -119,7 +120,8 @@ class _HomeElderState extends State<HomeElder> {
                             MaterialPageRoute(
                                 builder: (context) => LoginScreen()));
                       },
-                      icon: Icon(Icons.logout))
+                      icon: Icon(Icons.logout),
+                      color: (Colors.white)),
                 ],
               ),
             ),
@@ -192,7 +194,7 @@ class _HomeElderState extends State<HomeElder> {
                                     ),
                                     SizedBox(height: 5),
                                     Text(
-                                      'Dosage: ${medication.dosage}',
+                                      'Dose: ${medication.dosage}',
                                       style: TextStyle(
                                         fontSize: 16,
                                         color: Colors.white,
@@ -200,7 +202,7 @@ class _HomeElderState extends State<HomeElder> {
                                     ),
                                     SizedBox(height: 5),
                                     Text(
-                                      'Time: ${medication.time.hour}:${medication.time.minute}',
+                                      'Hora: ${medication.time.hour}:${medication.time.minute}',
                                       style: TextStyle(
                                         fontSize: 16,
                                         color: Colors.white,

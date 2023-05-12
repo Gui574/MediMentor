@@ -31,14 +31,17 @@ class HomeCaretaker extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  Spacer(),
                   IconButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
-                      },
-                      icon: Icon(Icons.logout))
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()));
+                    },
+                    icon: Icon(Icons.logout),
+                    color: Colors.white,
+                  )
                 ],
               ),
             ),
@@ -52,6 +55,14 @@ class HomeCaretaker extends StatelessWidget {
                         // Handle button press
                       },
                       child: Text('Alerta de Falta de Toma   ->'),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(200, 50), // sets the minimum size
+                        padding: EdgeInsets.all(16), // sets the padding
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              20), // sets the border radius
+                        ),
+                      ),
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
@@ -63,6 +74,14 @@ class HomeCaretaker extends StatelessWidget {
                         );
                       },
                       child: Text('Configuração de Medicamentos   ->'),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(200, 50), // sets the minimum size
+                        padding: EdgeInsets.all(16), // sets the padding
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              20), // sets the border radius
+                        ),
+                      ),
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
@@ -74,6 +93,14 @@ class HomeCaretaker extends StatelessWidget {
                         );
                       },
                       child: Text('Verificação de Medicamentos   ->'),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(200, 50), // sets the minimum size
+                        padding: EdgeInsets.all(16), // sets the padding
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              20), // sets the border radius
+                        ),
+                      ),
                     ),
                   ],
                 ),

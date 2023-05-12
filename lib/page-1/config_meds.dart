@@ -44,14 +44,17 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  Spacer(),
                   IconButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
-                      },
-                      icon: Icon(Icons.logout))
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()));
+                    },
+                    icon: Icon(Icons.logout),
+                    color: (Colors.white),
+                  )
                 ],
               ),
             ),
@@ -137,7 +140,7 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                                     ),
                                     SizedBox(height: 5),
                                     Text(
-                                      'Dosage: ${medication.dosage}',
+                                      'Dose: ${medication.dosage}',
                                       style: TextStyle(
                                         fontSize: 16,
                                         color: Colors.white,
@@ -145,7 +148,7 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                                     ),
                                     SizedBox(height: 5),
                                     Text(
-                                      'Time: ${medication.time}',
+                                      'Hora: ${medication.time.hour}:${medication.time.minute}',
                                       style: TextStyle(
                                         fontSize: 16,
                                         color: Colors.white,

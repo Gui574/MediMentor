@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    'Welcome to MyApp',
+                    'Bem-Vindo',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: _emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
-                        hintText: 'Enter your email',
+                        hintText: 'Introduza o Email',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        hintText: 'Enter your password',
+                        hintText: 'Introduza a sua Password',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextButton(
                       onPressed: () {},
                       child: Text(
-                        'Forgot password?',
+                        'Esquece Password?',
                         style: TextStyle(color: Colors.blue),
                       ),
                     ),
@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: OutlinedButton.styleFrom(
                       minimumSize: Size(150, 50),
                     ),
-                    child: Text('Register'),
+                    child: Text('Registar'),
                   ),
                 ],
               ),

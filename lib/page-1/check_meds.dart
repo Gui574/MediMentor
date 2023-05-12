@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:myapp/page-1/home_caretaker.dart';
 import 'package:myapp/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -51,6 +52,7 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  Spacer(),
                   IconButton(
                       onPressed: () {
                         Navigator.pushReplacement(
@@ -58,7 +60,8 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                             MaterialPageRoute(
                                 builder: (context) => LoginScreen()));
                       },
-                      icon: Icon(Icons.logout))
+                      icon: Icon(Icons.logout),
+                      color: Colors.white),
                 ],
               ),
             ),
@@ -164,7 +167,7 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                                     ),
                                     SizedBox(height: 5),
                                     Text(
-                                      'Dosage: ${medication.dosage}',
+                                      'Dose: ${medication.dosage}',
                                       style: TextStyle(
                                         fontSize: 16,
                                         color: Colors.white,
@@ -172,7 +175,7 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                                     ),
                                     SizedBox(height: 5),
                                     Text(
-                                      'Time: ${medication.time.hour}:${medication.time.minute}',
+                                      'Hora: ${medication.time.hour}:${medication.time.minute}',
                                       style: TextStyle(
                                         fontSize: 16,
                                         color: Colors.white,
@@ -217,7 +220,12 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                 children: [
                   IconButton(
                     icon: Icon(Icons.home, color: Colors.white),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeCaretaker()));
+                    },
                   ),
                   IconButton(
                     icon: Icon(Icons.settings, color: Colors.white),

@@ -5,6 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:myapp/page-1/config_meds.dart';
 import 'package:provider/provider.dart';
 
+import 'home_caretaker.dart';
+
 class Medication {
   final String name;
   final String dosage;
@@ -139,7 +141,7 @@ class _AddMedsPageState extends State<AddMedsPage> {
           backgroundColor: Colors.black,
           appBar: AppBar(
             backgroundColor: Color.fromARGB(255, 90, 89, 89),
-            title: Text('Add Medication Info'),
+            title: Text('Adicionar Medicação'),
           ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -149,6 +151,7 @@ class _AddMedsPageState extends State<AddMedsPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   TextFormField(
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Nome da Medicação',
                       labelStyle:
@@ -166,7 +169,7 @@ class _AddMedsPageState extends State<AddMedsPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter medication name';
+                        return 'Por favor introduza o nome';
                       }
                       return null;
                     },
@@ -176,8 +179,9 @@ class _AddMedsPageState extends State<AddMedsPage> {
                   ),
                   SizedBox(height: 10),
                   TextFormField(
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      labelText: 'Dosagem',
+                      labelText: 'Dose',
                       labelStyle:
                           TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                       focusedBorder: OutlineInputBorder(
@@ -193,7 +197,7 @@ class _AddMedsPageState extends State<AddMedsPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter medication dosage';
+                        return 'Por favor introduza a dose';
                       }
                       return null;
                     },
@@ -205,22 +209,22 @@ class _AddMedsPageState extends State<AddMedsPage> {
                   ElevatedButton(
                     onPressed: () => _selectTime(context),
                     child: Text(_selectedTime == null
-                        ? 'Select Medication Hour'
-                        : 'Medication Hour: ${_selectedTime!.hour}:${_selectedTime!.minute}'),
+                        ? 'Selecione a hora de toma'
+                        : 'Hora de Toma: ${_selectedTime!.hour}:${_selectedTime!.minute}'),
                   ),
                   SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () => _selectDate(context),
                     child: Text(_selectedDate == null
-                        ? 'Select Medication Date'
-                        : 'Medication Date: ${_selectedDate!.day}-${_selectedDate!.month}-${_selectedDate!.year}'),
+                        ? 'Selecione a data de toma'
+                        : 'Data de toma: ${_selectedDate!.day}-${_selectedDate!.month}-${_selectedDate!.year}'),
                   ),
                   SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: _selectImage,
                     child: Text(_selectedImage == null
-                        ? 'Select Medication Image'
-                        : 'Medication Image Selected'),
+                        ? 'Selecione a imagem da medicação'
+                        : 'Imagem selecionada'),
                   ),
                   SizedBox(height: 10),
                   _buildImagePreview(),
@@ -234,7 +238,7 @@ class _AddMedsPageState extends State<AddMedsPage> {
                         _addMedication(context);
                       }
                     },
-                    child: Text('Save'),
+                    child: Text('Guardar'),
                   ),
                 ],
               ),
@@ -254,7 +258,10 @@ class _AddMedsPageState extends State<AddMedsPage> {
                 IconButton(
                   icon: Icon(Icons.home, color: Colors.white),
                   onPressed: () {
-                    // do something
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HomeCaretaker()));
                   },
                 ),
                 IconButton(
