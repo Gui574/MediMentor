@@ -1,9 +1,28 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'add_med.dart';
 import 'login_screen.dart';
+
+class TimerModel extends ChangeNotifier {
+  Timer _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    // Your timer callback function here
+  });
+  int _timerValue = 0;
+
+  int get timerValue => _timerValue;
+
+  TimerModel() {
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      _timerValue = _timerValue + 5;
+
+      notifyListeners(); // Notify listeners that the timer has reached the specific point
+    });
+  }
+}
 
 class HomeElder extends StatefulWidget {
   HomeElder({
@@ -16,6 +35,45 @@ class HomeElder extends StatefulWidget {
 class _HomeElderState extends State<HomeElder> {
   DateTime selectedDate = DateTime.now();
   Color iconColor = Colors.yellow;
+  late Timer _timer;
+
+  void updateColors() {
+    setState(() {
+      final medicationData =
+          Provider.of<MedicationData>(context, listen: false);
+      final nowDate = DateTime.now();
+
+      for (Medication med in medicationData.medications) {
+        DateTime medicationDateTime = DateTime(
+          med.date.year,
+          med.date.month,
+          med.date.day,
+          med.time.hour,
+          med.time.minute,
+        );
+        final difference = nowDate.difference(medicationDateTime);
+
+        if (difference > Duration(seconds: 30)) {
+          if (med.color == Colors.yellow) {
+            med.color = Colors.red;
+          }
+        }
+      }
+    });
+  }
+
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      updateColors();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +87,12 @@ class _HomeElderState extends State<HomeElder> {
       selectedDate =
           DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
     });
+
+    void changeColor(context, Medication med) {
+      setState(() {
+        med.color = Colors.red;
+      });
+    }
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 0, 0, 0),
@@ -50,7 +114,7 @@ class _HomeElderState extends State<HomeElder> {
                   ),
                   IconButton(
                       onPressed: () {
-                        Navigator.pushReplacement(
+                        Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => LoginScreen()));
@@ -71,12 +135,13 @@ class _HomeElderState extends State<HomeElder> {
               ),
             ),
             Expanded(
-              child: Consumer<MedicationData>(
-                  builder: (context, medicationData, _) {
+              child: Consumer2<MedicationData, TimerModel>(
+                  builder: (context, medicationData, timermodel, _) {
                 final filteredMeds = medicationData.medications.where((med) =>
                     med.date.day == selectedDate.day &&
                     med.date.month == selectedDate.month &&
                     med.date.year == selectedDate.year);
+
                 return ListView.builder(
                   itemCount: filteredMeds.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -90,6 +155,8 @@ class _HomeElderState extends State<HomeElder> {
                         match = i;
                       }
                     }
+
+                    //int count = Provider.of<int>(context);
 
                     return SizedBox(
                       height: 120,

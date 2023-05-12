@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myapp/page-1/check_meds.dart';
 import 'package:myapp/utils.dart';
 
+import 'config_meds.dart';
 import 'login_screen.dart';
 
 class HomeCaretaker extends StatelessWidget {
@@ -40,33 +42,43 @@ class HomeCaretaker extends StatelessWidget {
                 ],
               ),
             ),
-           Center(
-  child: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      ElevatedButton(
-        onPressed: () {
-          // Handle button press
-        },
-        child: Text('Button 1'),
-      ),
-      SizedBox(height: 20),
-      ElevatedButton(
-        onPressed: () {
-          // Handle button press
-        },
-        child: Text('Button 2'),
-      ),
-      SizedBox(height: 20),
-      ElevatedButton(
-        onPressed: () {
-          // Handle button press
-        },
-        child: Text('Button 3'),
-      ),
-    ],
-  ),
-),           
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        // Handle button press
+                      },
+                      child: Text('Alerta de Falta de Toma   ->'),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ConfigMedsPage()),
+                        );
+                      },
+                      child: Text('Configuração de Medicamentos   ->'),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CheckMedsPage()),
+                        );
+                      },
+                      child: Text('Verificação de Medicamentos   ->'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             SizedBox(
               height: 50,
             ),

@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ConfigMedsPage()),
+                              builder: (context) => HomeCaretaker()),
                         );
                       } else if (result == "elder") {
                         Navigator.push(

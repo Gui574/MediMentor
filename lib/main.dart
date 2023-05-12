@@ -21,6 +21,9 @@ Future<void> main() async {
         ChangeNotifierProvider(
           create: (_) => MedicationData(),
         ),
+        ChangeNotifierProvider<TimerModel>(
+          create: (_) => TimerModel(),
+        ),
       ],
       child: MyApp(),
     ),
@@ -39,7 +42,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeCaretaker(),
+      home: LoginScreen(),
     );
   }
 }

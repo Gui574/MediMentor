@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'add_med.dart';
 import 'login_screen.dart';
 
-class CheckMedsPage extends StatefulWidget{
+class CheckMedsPage extends StatefulWidget {
   @override
   _CheckMedsPageState createState() => _CheckMedsPageState();
 }
@@ -26,7 +26,7 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
         DateFormat('EEEE, dd \'de\' MMMM \'de\' y', 'pt_BR');
     String formattedDate = dateFormat.format(selectedDate);
 
-    return  Scaffold(
+    return Scaffold(
       backgroundColor: Color.fromARGB(255, 0, 0, 0),
       body: SafeArea(
         child: Column(
@@ -36,6 +36,13 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
               color: Color.fromARGB(255, 90, 89, 89),
               child: Row(
                 children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    color: Colors.white,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                   Text(
                     'Verificar Medicamentos',
                     style: TextStyle(
@@ -114,14 +121,13 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                   itemCount: filteredMeds.length,
                   itemBuilder: (BuildContext context, int index) {
                     final medication = filteredMeds.elementAt(index);
-                    int match = -1;
-
-                    for (int i = 0;
-                        i < medicationData.medications.length;
-                        i++) {
-                      if (medication.equals(medicationData.medications[i])) {
-                        match = i;
-                      }
+                    String taken = "POR TOMAR";
+                    if (medication.color == Colors.green) {
+                      taken = "TOMADO";
+                    } else if (medication.color == Colors.yellow) {
+                      taken = "POR TOMAR";
+                    } else if (medication.color == Colors.red) {
+                      taken = "NÃO TOMADO";
                     }
 
                     return SizedBox(
@@ -176,7 +182,22 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                                 ),
                               ),
                             ),
-                            
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                minimumSize:
+                                    MaterialStateProperty.all(Size(100, 40)),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        medication.color),
+                              ),
+                              onPressed: () {},
+                              child: Text(taken),
+                            ),
                           ],
                         ),
                       ),
