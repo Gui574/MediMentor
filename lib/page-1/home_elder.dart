@@ -249,15 +249,11 @@ class _HomeElderState extends State<HomeElder> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.home, color: Colors.white),
+                    icon: Icon(Icons.call, color: Colors.white),
                     onPressed: () {},
                   ),
                   IconButton(
-                    icon: Icon(Icons.settings, color: Colors.white),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.search, color: Colors.white),
+                    icon: Icon(Icons.message, color: Colors.white),
                     onPressed: () {},
                   ),
                 ],
