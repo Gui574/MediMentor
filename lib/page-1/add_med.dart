@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:myapp/page-1/config_meds.dart';
 import 'package:provider/provider.dart';
 
+import 'check_meds.dart';
 import 'home_caretaker.dart';
 
 class Medication {
@@ -15,13 +16,14 @@ class Medication {
   final TimeOfDay time;
   Color color;
 
-  Medication(
-      {required this.name,
-      required this.dosage,
-      required this.date,
-      required this.image,
-      required this.color,
-      required this.time});
+  Medication({
+    required this.name,
+    required this.dosage,
+    required this.date,
+    required this.image,
+    required this.time,
+    required this.color,
+  });
 
   bool equals(Medication med) {
     if (name == med.name &&
@@ -34,7 +36,7 @@ class Medication {
     }
   }
 
-  String get imagePath => image!.path;
+  String get imagePath => image?.path ?? '';
 }
 
 class MedicationData extends ChangeNotifier {
@@ -49,6 +51,9 @@ class MedicationData extends ChangeNotifier {
 }
 
 class AddMedsPage extends StatefulWidget {
+  final DateTime selectedDate;
+
+  AddMedsPage({required this.selectedDate});
   @override
   _AddMedsPageState createState() => _AddMedsPageState();
 }
@@ -61,52 +66,41 @@ class _AddMedsPageState extends State<AddMedsPage> {
   File? _selectedImage;
   TimeOfDay? _selectedTime;
   Color? _medicationColor = Colors.yellow;
+  int _numberOfDays = 1;
 
-  void _addMedication(BuildContext context) {
+  void _addMedication(BuildContext context, DateTime date) {
     final medicationData = Provider.of<MedicationData>(context, listen: false);
+    final nextDays = List<DateTime>.generate(
+      _numberOfDays,
+      (index) => widget.selectedDate!.add(Duration(days: index + 1)),
+    );
 
-    final medication = Medication(
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      final nextMedication = Medication(
         name: _medicationName!,
         dosage: _medicationDosage!,
-        date: _selectedDate!,
-        color: _medicationColor!,
+        date: widget.selectedDate,
+        color: Colors.yellow,
         image: _selectedImage,
-        time: _selectedTime!);
+        time: _selectedTime!,
+      );
+      medicationData.addMedication(nextMedication);
 
-    medicationData.addMedication(medication);
-
-    // Navigate back to HomeElder page
-    Navigator.pop(context);
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2021),
-      lastDate: DateTime(2030),
-    );
-    if (picked != null && picked != _selectedDate)
-      setState(() {
-        _selectedDate = picked;
-      });
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-          child: child ?? Container(),
+      for (final date in nextDays) {
+        final nextMedication = Medication(
+          name: _medicationName!,
+          dosage: _medicationDosage!,
+          date: date,
+          color: Colors.yellow,
+          image: _selectedImage,
+          time: _selectedTime!,
         );
-      },
-    );
-    if (picked != null && picked != _selectedTime) {
-      setState(() {
-        _selectedTime = picked;
-      });
+        medicationData.addMedication(nextMedication);
+      }
+
+      // Navigate back to HomeElder page
+      Navigator.pop(context);
     }
   }
 
@@ -122,7 +116,19 @@ class _AddMedsPageState extends State<AddMedsPage> {
 
   Widget _buildImagePreview() {
     if (_selectedImage == null) {
-      return Container();
+      return InkWell(
+        onTap: _selectImage,
+        child: Container(
+          height: 200,
+          width: 200,
+          color: Colors.grey,
+          child: Icon(
+            Icons.add,
+            size: 50,
+            color: Colors.white,
+          ),
+        ),
+      );
     } else {
       return Container(
         height: 200,
@@ -132,155 +138,225 @@ class _AddMedsPageState extends State<AddMedsPage> {
     }
   }
 
+  List<int> _hoursList = List<int>.generate(24, (index) => index);
+
+  Widget _buildTimeButton(int hour) {
+    final isSelected = _selectedTime?.hour == hour;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      child: ElevatedButton(
+        onPressed: () {
+          setState(() {
+            _selectedTime = TimeOfDay(hour: hour, minute: 0);
+          });
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(
+            isSelected ? Color.fromARGB(255, 106, 144, 247) : Colors.grey,
+          ),
+          padding: MaterialStateProperty.all(
+            EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          ),
+          textStyle: MaterialStateProperty.all(
+            TextStyle(fontSize: 18.0),
+          ),
+        ),
+        child: Text('$hour:00'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
-        child: Stack(
-      children: [
-        Scaffold(
-          backgroundColor: Colors.black,
-          appBar: AppBar(
-            backgroundColor: Color.fromARGB(255, 90, 89, 89),
-            title: Text('Adicionar Medicação'),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  TextFormField(
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Nome da Medicação',
-                      labelStyle:
-                          TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            width: 2.0),
+      child: Stack(
+        children: [
+          Scaffold(
+            backgroundColor: Color.fromARGB(255, 255, 255, 255),
+            appBar: AppBar(
+              backgroundColor: Color.fromARGB(255, 106, 144, 247),
+              title: Text('Add Medication'),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    _buildImagePreview(),
+                    SizedBox(height: 40),
+                    TextFormField(
+                      style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                      decoration: InputDecoration(
+                        labelText: 'Medication Name',
+                        labelStyle:
+                            TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 0, 0, 0), width: 2.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 0, 0, 0), width: 1.0),
+                        ),
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            width: 1.0),
+                      onChanged: (value) {
+                        _medicationName = value;
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                      decoration: InputDecoration(
+                        labelText: 'Dosage',
+                        labelStyle:
+                            TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 0, 0, 0), width: 2.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 0, 0, 0), width: 1.0),
+                        ),
+                      ),
+                      onChanged: (value) {
+                        _medicationDosage = value;
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        child: Row(
+                          children: _hoursList
+                              .map((hour) => _buildTimeButton(hour))
+                              .toList(),
+                        ),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor introduza o nome';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _medicationName = value;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Dose',
-                      labelStyle:
-                          TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            width: 1.0),
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          'Number of days: ',
+                          style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                        ),
+                        SizedBox(width: 10),
+                        DropdownButton<int>(
+                          value: _numberOfDays,
+                          onChanged: (value) {
+                            setState(() {
+                              _numberOfDays = value!;
+                            });
+                          },
+                          items: List.generate(10, (index) {
+                            final days = index + 1;
+                            return DropdownMenuItem<int>(
+                              value: days,
+                              child: Text(days.toString()),
+                            );
+                          }),
+                        ),
+                      ],
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor introduza a dose';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _medicationDosage = value;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () => _selectTime(context),
-                    child: Text(_selectedTime == null
-                        ? 'Selecione a hora de toma'
-                        : 'Hora de Toma: ${_selectedTime!.hour}:${_selectedTime!.minute}'),
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () => _selectDate(context),
-                    child: Text(_selectedDate == null
-                        ? 'Selecione a data de toma'
-                        : 'Data de toma: ${_selectedDate!.day}-${_selectedDate!.month}-${_selectedDate!.year}'),
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _selectImage,
-                    child: Text(_selectedImage == null
-                        ? 'Selecione a imagem da medicação'
-                        : 'Imagem selecionada'),
-                  ),
-                  SizedBox(height: 10),
-                  _buildImagePreview(),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_medicationName == null ||
+                            _medicationDosage == null ||
+                            _selectedTime == null ||
+                            _selectedImage == null ||
+                            _numberOfDays == null) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Error'),
+                                content: Text(
+                                    'Por favor enter all the fields, including an image'),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    child: Text('OK'),
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            Color.fromARGB(255, 106, 144, 247)),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return;
+                        } else {
+                          _addMedication(context, widget.selectedDate);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Medication added successfully'),
+                              backgroundColor: Colors.green,
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
                         // save medication info to database
-
-                        _addMedication(context);
-                      }
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 106, 144, 247)),
+                      child: Text('Save'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 60,
+              color: Color.fromARGB(255, 106, 144, 247),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.home, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomeCaretaker(),
+                        ),
+                      );
                     },
-                    child: Text('Guardar'),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.fact_check, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CheckMedsPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.account_box, color: Colors.white),
+                    onPressed: () {
+                      // do something
+                    },
                   ),
                 ],
               ),
             ),
           ),
-        ),
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: Container(
-            height: 60,
-            color: Color.fromARGB(255, 90, 89, 89),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.home, color: Colors.white),
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HomeCaretaker()));
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.settings, color: Colors.white),
-                  onPressed: () {
-                    // do something
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.search, color: Colors.white),
-                  onPressed: () {
-                    // do something
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 }

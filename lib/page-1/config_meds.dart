@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:myapp/page-1/check_meds.dart';
 import 'package:provider/provider.dart';
-
+import 'package:table_calendar/table_calendar.dart';
 import 'add_med.dart';
+import 'home_caretaker.dart';
 import 'login_screen.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class ConfigMedsPage extends StatefulWidget {
   ConfigMedsPage({
@@ -16,30 +19,46 @@ class ConfigMedsPage extends StatefulWidget {
 
 class _ConfigMedsPageState extends State<ConfigMedsPage> {
   DateTime selectedDate = DateTime.now();
+  CalendarFormat _calendarFormat = CalendarFormat.week;
+  DateTime _focusedDay = DateTime.now();
+  late PageController _pageController;
+
+  void _changeMonth(int months) {
+    setState(() {
+      _focusedDay = DateTime(_focusedDay.year, _focusedDay.month + months);
+      _pageController.jumpToPage(_pageController.page!.toInt() + months);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _focusedDay.month - 1);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 0, 0, 0),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: Column(
           children: [
             Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              color: Color.fromARGB(255, 90, 89, 89),
+              color: Color.fromARGB(255, 106, 144, 247),
               child: Row(
                 children: [
                   IconButton(
                     icon: Icon(Icons.arrow_back),
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 255, 255, 255),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
                   Text(
-                    'Configurar de Medicamentos',
+                    'Configurate Medications',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Color.fromARGB(255, 255, 255, 255),
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -47,53 +66,59 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                   Spacer(),
                   IconButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()));
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Confirmation'),
+                            content: Text('Are you sure you want to logout?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  // Perform action on confirmation
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              LoginScreen())); // Close the dialog
+                                },
+                                child: Text('Yes'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // Perform action on cancel
+                                  Navigator.pop(context); // Close the dialog
+                                },
+                                child: Text('No'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                     icon: Icon(Icons.logout),
-                    color: (Colors.white),
+                    color: (Color.fromARGB(255, 255, 255, 255)),
                   )
                 ],
               ),
             ),
-            Container(
-              color: Color.fromARGB(255, 56, 55, 55),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Data: ',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextButton(
-                    child: Text(DateFormat('dd/MM/yyyy').format(selectedDate),
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    onPressed: () async {
-                      final DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: selectedDate,
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2030),
-                      );
-                      if (pickedDate != null && pickedDate != selectedDate) {
-                        setState(() {
-                          selectedDate = pickedDate;
-                        });
-                        //print(selectedDate);
-                      }
-                    },
-                  ),
-                ],
-              ),
+            TableCalendar(
+              calendarFormat: _calendarFormat,
+              onFormatChanged: (format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              },
+              firstDay: DateTime.utc(2023, 5, 1),
+              lastDay: DateTime.utc(2030, 3, 14),
+              focusedDay: DateTime.now(),
+              selectedDayPredicate: (day) => isSameDay(selectedDate, day),
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  selectedDate = selectedDay;
+                  _focusedDay = focusedDay;
+                });
+              },
             ),
             Expanded(
               child: Consumer<MedicationData>(
@@ -102,68 +127,82 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                     med.date.day == selectedDate.day &&
                     med.date.month == selectedDate.month &&
                     med.date.year == selectedDate.year);
-                return ListView.builder(
-                  itemCount: filteredMeds.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final medication = filteredMeds.elementAt(index);
-                    return SizedBox(
-                      height: 120,
-                      child: Card(
-                        color: Colors.transparent,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.file(
-                                  medication.image!,
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      medication.name,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      'Dose: ${medication.dosage}',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      'Hora: ${medication.time.hour}:${medication.time.minute}',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+
+                if (filteredMeds.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'No medications to display',
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
                       ),
-                    );
-                  },
-                );
+                    ),
+                  );
+                } else {
+                  return ListView.builder(
+                    itemCount: filteredMeds.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final medication = filteredMeds.elementAt(index);
+                      return SizedBox(
+                        height: 120,
+                        child: Card(
+                          color: Color.fromARGB(255, 106, 144, 247),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.file(
+                                    medication.image!,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        medication.name,
+                                        style: TextStyle(
+                                          color: Color.fromARGB(255, 0, 0, 0),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Dosage: ${medication.dosage}',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Color.fromARGB(255, 0, 0, 0),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Time: ${medication.time.hour}:${medication.time.minute}',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Color.fromARGB(255, 0, 0, 0),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
               }),
             ),
             Row(
@@ -174,14 +213,16 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AddMedsPage(),
+                        builder: (context) =>
+                            AddMedsPage(selectedDate: selectedDate),
                       ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(150, 50),
+                    backgroundColor: Color.fromARGB(255, 106, 144, 247),
                   ),
-                  child: Text('+ Adicionar Medicamento'),
+                  child: Text('+ Add Medication'),
                 ),
               ],
             ),
@@ -190,21 +231,37 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
             ),
             Container(
               height: 70,
-              color: Color.fromARGB(255, 90, 89, 89),
+              color: Color.fromARGB(255, 106, 144, 247),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
                     icon: Icon(Icons.home, color: Colors.white),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomeCaretaker(),
+                        ),
+                      );
+                    },
                   ),
                   IconButton(
-                    icon: Icon(Icons.settings, color: Colors.white),
-                    onPressed: () {},
+                    icon: Icon(Icons.fact_check, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CheckMedsPage(),
+                        ),
+                      );
+                    },
                   ),
                   IconButton(
-                    icon: Icon(Icons.search, color: Colors.white),
-                    onPressed: () {},
+                    icon: Icon(Icons.account_box, color: Colors.white),
+                    onPressed: () {
+                      // do something
+                    },
                   ),
                 ],
               ),

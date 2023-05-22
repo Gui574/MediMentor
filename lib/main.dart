@@ -13,8 +13,9 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('pt_BR', null);
-  //List<Medication> medicationData = []; // initialize an empty list
+
   runApp(
     MultiProvider(
       providers: [

@@ -64,7 +64,7 @@ class _HomeElderState extends State<HomeElder> {
 
   void initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 60), (timer) {
       updateColors();
     });
   }
@@ -79,8 +79,8 @@ class _HomeElderState extends State<HomeElder> {
   Widget build(BuildContext context) {
     // Format the selected date in the desired format
 
-    final DateFormat dateFormat =
-        DateFormat('EEEE, dd \'de\' MMMM \'de\' y', 'pt_BR');
+    final DateFormat dateFormat = DateFormat('EEEE, dd MMMM y', 'en_US');
+
     String formattedDate = dateFormat.format(selectedDate);
 
     setState(() {
@@ -95,17 +95,17 @@ class _HomeElderState extends State<HomeElder> {
     }
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 0, 0, 0),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: Column(
           children: [
             Container(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              color: Color.fromARGB(255, 90, 89, 89),
+              color: Color.fromARGB(255, 106, 144, 247),
               child: Row(
                 children: [
                   Text(
-                    'Painel',
+                    'Panel',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -115,10 +115,35 @@ class _HomeElderState extends State<HomeElder> {
                   Spacer(),
                   IconButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Confirmation'),
+                              content: Text('Are you sure you want to logout?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    // Perform action on confirmation
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                LoginScreen())); // Close the dialog
+                                  },
+                                  child: Text('Yes'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // Perform action on cancel
+                                    Navigator.pop(context); // Close the dialog
+                                  },
+                                  child: Text('No'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                       icon: Icon(Icons.logout),
                       color: (Colors.white)),
@@ -130,7 +155,7 @@ class _HomeElderState extends State<HomeElder> {
               child: Text(
                 formattedDate,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Color.fromARGB(255, 53, 53, 53),
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -144,115 +169,166 @@ class _HomeElderState extends State<HomeElder> {
                     med.date.month == selectedDate.month &&
                     med.date.year == selectedDate.year);
 
-                return ListView.builder(
-                  itemCount: filteredMeds.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final medication = filteredMeds.elementAt(index);
-                    int match = -1;
-
-                    for (int i = 0;
-                        i < medicationData.medications.length;
-                        i++) {
-                      if (medication.equals(medicationData.medications[i])) {
-                        match = i;
-                      }
-                    }
-
-                    //int count = Provider.of<int>(context);
-
-                    return SizedBox(
-                      height: 120,
-                      child: Card(
-                        color: Colors.transparent,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.file(
-                                  medication.image!,
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      medication.name,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      'Dose: ${medication.dosage}',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      'Hora: ${medication.time.hour}:${medication.time.minute}',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (medicationData.medications[match].color ==
-                                      Colors.yellow) {
-                                    medicationData.medications[match].color =
-                                        Colors.green;
-                                  } else if (medicationData
-                                          .medications[match].color ==
-                                      Colors.green) {
-                                    medicationData.medications[match].color =
-                                        Colors.yellow;
-                                  }
-                                });
-                              },
-                              icon: Icon(Icons.check_circle_outline),
-                              color: medicationData.medications[match].color,
-                              iconSize: 50.0,
-                            ),
-                          ],
-                        ),
+                if (filteredMeds.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'No medications to display',
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
                       ),
-                    );
-                  },
-                );
+                    ),
+                  );
+                } else {
+                  return ListView.builder(
+                    itemCount: filteredMeds.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final medication = filteredMeds.elementAt(index);
+                      int match = -1;
+
+                      for (int i = 0;
+                          i < medicationData.medications.length;
+                          i++) {
+                        if (medication.equals(medicationData.medications[i])) {
+                          match = i;
+                        }
+                      }
+
+                      //int count = Provider.of<int>(context);
+
+                      return SizedBox(
+                        height: 120,
+                        child: Card(
+                          color: Color.fromARGB(255, 142, 167, 236),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.file(
+                                    medication.image!,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        medication.name,
+                                        style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 56, 56, 56),
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Dosage: ${medication.dosage}',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color:
+                                              Color.fromARGB(255, 53, 52, 52),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Time: ${medication.time.hour}:${medication.time.minute}',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color:
+                                              Color.fromARGB(255, 53, 52, 52),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  setState(() {
+                                    if (medicationData
+                                            .medications[match].color ==
+                                        Colors.yellow) {
+                                      medicationData.medications[match].color =
+                                          Colors.green;
+                                    } else if (medicationData
+                                            .medications[match].color ==
+                                        Colors.green) {
+                                      medicationData.medications[match].color =
+                                          Colors.yellow;
+                                    }
+                                  });
+                                },
+                                icon: Icon(
+                                  medicationData.medications[match].color ==
+                                          Colors.red
+                                      ? Icons.dangerous
+                                      : medicationData
+                                                  .medications[match].color ==
+                                              Colors.yellow
+                                          ? Icons.question_mark_rounded
+                                          : Icons.check_box,
+                                  color:
+                                      medicationData.medications[match].color,
+                                  size: 50.0,
+                                ),
+                                label: Text(
+                                  medicationData.medications[match].color ==
+                                          Colors.red
+                                      ? 'MISSED!'
+                                      : medicationData
+                                                  .medications[match].color ==
+                                              Colors.green
+                                          ? 'TAKEN'
+                                          : 'TO TAKE',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color:
+                                        medicationData.medications[match].color,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  elevation: 0,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  padding: EdgeInsets.zero,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
               }),
             ),
             SizedBox(
               height: 50,
             ),
             Container(
-              height: 70,
-              color: Color.fromARGB(255, 90, 89, 89),
+              height: 90,
+              color: Color.fromARGB(255, 106, 144, 247),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
+                    iconSize: 30,
                     icon: Icon(Icons.call, color: Colors.white),
                     onPressed: () {},
                   ),
                   IconButton(
+                    iconSize: 30,
                     icon: Icon(Icons.message, color: Colors.white),
                     onPressed: () {},
                   ),

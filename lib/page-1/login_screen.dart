@@ -87,7 +87,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {},
                       child: Text(
                         'Esquece Password?',
-                        style: TextStyle(color: Colors.blue),
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 106, 144, 247)),
                       ),
                     ),
                   ],
@@ -103,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: ButtonStyle(
                       minimumSize: MaterialStateProperty.all(Size(150, 50)),
                       backgroundColor: MaterialStateProperty.all<Color>(
-                          Color.fromARGB(255, 36, 169, 247)),
+                          Color.fromARGB(255, 106, 144, 247)),
                     ),
                     onPressed: () {
                       String result = loginLogic(
@@ -119,6 +120,27 @@ class _LoginScreenState extends State<LoginScreen> {
                           context,
                           MaterialPageRoute(builder: (context) => HomeElder()),
                         );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Error'),
+                              content: Text('Wrong e-mail or password'),
+                              actions: <Widget>[
+                                ElevatedButton(
+                                  child: Text('OK'),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Color.fromARGB(255, 106, 144, 247)),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       }
                     },
                     child: Text('Login'),
@@ -129,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: OutlinedButton.styleFrom(
                       minimumSize: Size(150, 50),
                     ),
-                    child: Text('Registar'),
+                    child: Text('Sign Up'),
                   ),
                 ],
               ),
