@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:myapp/page-1/check_meds.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'add_med.dart';
 import 'home_caretaker.dart';
 import 'login_screen.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 class ConfigMedsPage extends StatefulWidget {
-  ConfigMedsPage({
+  const ConfigMedsPage({
     Key? key,
   }) : super(key: key);
 
@@ -39,23 +37,23 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              color: Color.fromARGB(255, 106, 144, 247),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              color: const Color.fromARGB(255, 106, 144, 247),
               child: Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    color: Color.fromARGB(255, 255, 255, 255),
+                    icon: const Icon(Icons.arrow_back),
+                    color: const Color.fromARGB(255, 255, 255, 255),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
-                  Text(
+                  const Text(
                     'Configurate Medications',
                     style: TextStyle(
                       color: Color.fromARGB(255, 255, 255, 255),
@@ -63,15 +61,15 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   IconButton(
                     onPressed: () {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('Confirmation'),
-                            content: Text('Are you sure you want to logout?'),
+                            title: const Text('Confirmation'),
+                            content: const Text('Are you sure you want to logout?'),
                             actions: [
                               TextButton(
                                 onPressed: () {
@@ -80,24 +78,24 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              LoginScreen())); // Close the dialog
+                                              const LoginScreen())); // Close the dialog
                                 },
-                                child: Text('Yes'),
+                                child: const Text('Yes'),
                               ),
                               TextButton(
                                 onPressed: () {
                                   // Perform action on cancel
                                   Navigator.pop(context); // Close the dialog
                                 },
-                                child: Text('No'),
+                                child: const Text('No'),
                               ),
                             ],
                           );
                         },
                       );
                     },
-                    icon: Icon(Icons.logout),
-                    color: (Color.fromARGB(255, 255, 255, 255)),
+                    icon: const Icon(Icons.logout),
+                    color: (const Color.fromARGB(255, 255, 255, 255)),
                   )
                 ],
               ),
@@ -129,7 +127,7 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                     med.date.year == selectedDate.year);
 
                 if (filteredMeds.isEmpty) {
-                  return Center(
+                  return const Center(
                     child: Text(
                       'No medications to display',
                       style: TextStyle(
@@ -146,7 +144,7 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                       return SizedBox(
                         height: 120,
                         child: Card(
-                          color: Color.fromARGB(255, 106, 144, 247),
+                          color: const Color.fromARGB(255, 106, 144, 247),
                           child: Row(
                             children: [
                               Padding(
@@ -170,24 +168,24 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                                     children: [
                                       Text(
                                         medication.name,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Color.fromARGB(255, 0, 0, 0),
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       Text(
                                         'Dosage: ${medication.dosage}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           color: Color.fromARGB(255, 0, 0, 0),
                                         ),
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       Text(
                                         'Time: ${medication.time.hour}:${medication.time.minute}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           color: Color.fromARGB(255, 0, 0, 0),
                                         ),
@@ -219,46 +217,46 @@ class _ConfigMedsPageState extends State<ConfigMedsPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size(150, 50),
-                    backgroundColor: Color.fromARGB(255, 106, 144, 247),
+                    minimumSize: const Size(150, 50),
+                    backgroundColor: const Color.fromARGB(255, 106, 144, 247),
                   ),
-                  child: Text('+ Add Medication'),
+                  child: const Text('+ Add Medication'),
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             Container(
               height: 70,
-              color: Color.fromARGB(255, 106, 144, 247),
+              color: const Color.fromARGB(255, 106, 144, 247),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.home, color: Colors.white),
+                    icon: const Icon(Icons.home, color: Colors.white),
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HomeCaretaker(),
+                          builder: (context) => const HomeCaretaker(),
                         ),
                       );
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.fact_check, color: Colors.white),
+                    icon: const Icon(Icons.fact_check, color: Colors.white),
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CheckMedsPage(),
+                          builder: (context) => const CheckMedsPage(),
                         ),
                       );
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.account_box, color: Colors.white),
+                    icon: const Icon(Icons.account_box, color: Colors.white),
                     onPressed: () {
                       // do something
                     },

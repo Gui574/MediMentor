@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/page-1/config_meds.dart';
 import 'package:myapp/page-1/home_caretaker.dart';
 import 'package:myapp/page-1/home_elder.dart';
-import 'add_med.dart';
 import 'login_logic.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({
+  const LoginScreen({
     Key? key,
   }) : super(key: key);
 
+  @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
@@ -29,26 +28,26 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Centered and resized top image
-              Center(
+              const Center(
                 child: Image(
                   image: AssetImage('assets/page-1/images/HomeImage.png'),
                   height: 250,
                   width: 200,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Welcome text
-              Center(
+              const Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
                     'Bem-Vindo',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               // Input boxes
               Padding(
@@ -57,17 +56,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     TextField(
                       controller: _emailController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Email',
                         hintText: 'Introduza o Email',
                         border: OutlineInputBorder(),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextField(
                       controller: _passwordController,
                       obscureText: true,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Password',
                         hintText: 'Introduza a sua Password',
                         border: OutlineInputBorder(),
@@ -76,16 +75,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     TextButton(
                       onPressed: () {},
-                      child: Text(
+                      child: const Text(
                         'Esquece Password?',
                         style: TextStyle(
                             color: Color.fromARGB(255, 106, 144, 247)),
@@ -102,9 +101,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   ElevatedButton(
                     style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(Size(150, 50)),
+                      minimumSize: MaterialStateProperty.all(const Size(150, 50)),
                       backgroundColor: MaterialStateProperty.all<Color>(
-                          Color.fromARGB(255, 106, 144, 247)),
+                          const Color.fromARGB(255, 106, 144, 247)),
                     ),
                     onPressed: () {
                       String result = loginLogic(
@@ -113,29 +112,29 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => HomeCaretaker()),
+                              builder: (context) => const HomeCaretaker()),
                         );
                       } else if (result == "elder") {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => HomeElder()),
+                          MaterialPageRoute(builder: (context) => const HomeElder()),
                         );
                       } else {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Error'),
-                              content: Text('Wrong e-mail or password'),
+                              title: const Text('Error'),
+                              content: const Text('Wrong e-mail or password'),
                               actions: <Widget>[
                                 ElevatedButton(
-                                  child: Text('OK'),
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor:
-                                          Color.fromARGB(255, 106, 144, 247)),
+                                          const Color.fromARGB(255, 106, 144, 247)),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
+                                  child: const Text('OK'),
                                 ),
                               ],
                             );
@@ -143,23 +142,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       }
                     },
-                    child: Text('Login'),
+                    child: const Text('Login'),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   OutlinedButton(
                     onPressed: () {},
                     style: OutlinedButton.styleFrom(
-                      minimumSize: Size(150, 50),
+                      minimumSize: const Size(150, 50),
                     ),
-                    child: Text('Sign Up'),
+                    child: const Text('Sign Up'),
                   ),
                 ],
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Logo at the bottom
-              Expanded(
+              const Expanded(
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Image(

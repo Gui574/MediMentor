@@ -1,11 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
-import 'dart:ui';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/page-1/check_meds.dart';
-import 'package:myapp/utils.dart';
 import 'package:provider/provider.dart';
 
 import 'add_med.dart';
@@ -13,13 +9,16 @@ import 'config_meds.dart';
 import 'login_screen.dart';
 
 class HomeCaretaker extends StatefulWidget {
+  const HomeCaretaker({super.key});
+
+  @override
   _HomeCaretakerPage createState() => _HomeCaretakerPage();
 }
 
 class _HomeCaretakerPage extends State<HomeCaretaker> {
   DateTime selectedDate = DateTime.now();
   late Timer _timer;
-  Color _iconColor = Colors.white;
+  final Color _iconColor = Colors.white;
 
   void updateColors() {
     setState(() {
@@ -37,7 +36,7 @@ class _HomeCaretakerPage extends State<HomeCaretaker> {
         );
         final difference = nowDate.difference(medicationDateTime);
 
-        if (difference > Duration(seconds: 30)) {
+        if (difference > const Duration(seconds: 30)) {
           if (med.color == Colors.yellow) {
             med.color = Colors.red;
           }
@@ -46,9 +45,10 @@ class _HomeCaretakerPage extends State<HomeCaretaker> {
     });
   }
 
+  @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       updateColors();
     });
   }
@@ -71,17 +71,17 @@ class _HomeCaretakerPage extends State<HomeCaretaker> {
     int missedMedicationCount = missedMedications.length;
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              color: Color.fromARGB(255, 106, 144, 247),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              color: const Color.fromARGB(255, 106, 144, 247),
               child: Row(
                 children: [
-                  Text(
+                  const Text(
                     'Panel',
                     style: TextStyle(
                       color: Color.fromARGB(255, 255, 255, 255),
@@ -89,15 +89,15 @@ class _HomeCaretakerPage extends State<HomeCaretaker> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   IconButton(
                     onPressed: () {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('Confirmation'),
-                            content: Text('Are you sure you want to logout?'),
+                            title: const Text('Confirmation'),
+                            content: const Text('Are you sure you want to logout?'),
                             actions: [
                               TextButton(
                                 onPressed: () {
@@ -106,67 +106,83 @@ class _HomeCaretakerPage extends State<HomeCaretaker> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              LoginScreen())); // Close the dialog
+                                              const LoginScreen())); // Close the dialog
                                 },
-                                child: Text('Yes'),
+                                child: const Text('Yes'),
                               ),
                               TextButton(
                                 onPressed: () {
                                   // Perform action on cancel
                                   Navigator.pop(context); // Close the dialog
                                 },
-                                child: Text('No'),
+                                child: const Text('No'),
                               ),
                             ],
                           );
                         },
                       );
                     },
-                    icon: Icon(Icons.logout),
+                    icon: const Icon(Icons.logout),
                     color: _iconColor,
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 10),
-            Padding(
+            const SizedBox(height: 10),
+             Padding(
               padding: EdgeInsets.all(20),
               child: Column(
                 children: [
-                  Center(
-                      child: Text(
-                    'Welcome, Mr. José!',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 56, 55, 55),
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
-                  SizedBox(height: 5),
+                  Row(
+              //mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                
+                SizedBox(width: 10), // Add a spacing of 10 pixels between the welcome message and the image
+                Image.asset(
+                  'assets/page-1/images/pill.jpg', // Replace with your image path
+                  width: 70,
+                  height: 100,
+                ),
+                Text(
+                  'Welcome, Mr.José!',
+                  style: TextStyle(fontSize: 24),
+                ),
+              ],
+            ),
+                  SizedBox(height: 10),
+                  
+                  Text(
+                  'Below you can see your alerts and configure/check the medication associated with Mr. António',
+                  style: TextStyle(fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+                
                 ],
+                
               ),
+              
             ),
             if (missedMedicationCount > 0) ...[
               SingleChildScrollView(
                 child: Container(
-                  margin: EdgeInsets.all(20),
-                  padding: EdgeInsets.all(20),
+                  margin: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 205, 217, 250),
+                    color: const Color.fromARGB(255, 205, 217, 250),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.warning,
                         color: Color.fromARGB(255, 255, 0, 0),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: Center(
                           child: Text(
                             'Mr. António missed  $missedMedicationCount medications today! Go to Check Medications to view them',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Color.fromARGB(255, 255, 0, 0),
                               fontSize: 18,
                             ),
@@ -179,13 +195,13 @@ class _HomeCaretakerPage extends State<HomeCaretaker> {
               )
             ] else ...[
               Container(
-                margin: EdgeInsets.all(20),
-                padding: EdgeInsets.all(20),
+                margin: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.grey,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Row(
+                child: const Row(
                   children: [
                     Icon(
                       Icons.warning,
@@ -207,27 +223,18 @@ class _HomeCaretakerPage extends State<HomeCaretaker> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => CheckMedsPage()),
+                              builder: (context) => const CheckMedsPage()),
                         );
                       },
-                      child: Text(
-                        'Check Medications   ->',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: missedMedicationCount > 0
-                              ? Colors.white
-                              : Color.fromARGB(255, 255, 255, 255),
-                        ),
-                      ),
                       style: ElevatedButton.styleFrom(
-                        fixedSize: Size(350, 70),
-                        padding: EdgeInsets.all(16),
+                        fixedSize: const Size(350, 70),
+                        padding: const EdgeInsets.all(16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -235,65 +242,74 @@ class _HomeCaretakerPage extends State<HomeCaretaker> {
                             ? Colors.red
                             : Colors.green,
                       ),
+                      child: Text(
+                        'Check Medications   ->',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: missedMedicationCount > 0
+                              ? Colors.white
+                              : const Color.fromARGB(255, 255, 255, 255),
+                        ),
+                      ),
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ConfigMedsPage()),
+                              builder: (context) => const ConfigMedsPage()),
                         );
                       },
-                      child: Text('Configurate Medications   ->',
-                          style: TextStyle(fontSize: 20)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 106, 144, 247),
-                        fixedSize: Size(350, 70), // sets the minimum size
-                        padding: EdgeInsets.all(16), // sets the padding
+                        backgroundColor: const Color.fromARGB(255, 106, 144, 247),
+                        fixedSize: const Size(350, 70), // sets the minimum size
+                        padding: const EdgeInsets.all(16), // sets the padding
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
                               20), // sets the border radius
                         ),
                       ),
+                      child: const Text('Configurate Medications   ->',
+                          style: TextStyle(fontSize: 20)),
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             Container(
               height: 70,
-              color: Color.fromARGB(255, 106, 144, 247),
+              color: const Color.fromARGB(255, 106, 144, 247),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.home, color: Colors.white),
+                    icon: const Icon(Icons.home, color: Colors.white),
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HomeCaretaker(),
+                          builder: (context) => const HomeCaretaker(),
                         ),
                       );
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.fact_check, color: Colors.white),
+                    icon: const Icon(Icons.fact_check, color: Colors.white),
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CheckMedsPage(),
+                          builder: (context) => const CheckMedsPage(),
                         ),
                       );
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.account_box, color: Colors.white),
+                    icon: const Icon(Icons.medication, color: Colors.white),
                     onPressed: () {
                       // do something
                     },

@@ -8,7 +8,7 @@ import 'add_med.dart';
 import 'login_screen.dart';
 
 class TimerModel extends ChangeNotifier {
-  Timer _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+  Timer _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
     // Your timer callback function here
   });
   int _timerValue = 0;
@@ -16,7 +16,7 @@ class TimerModel extends ChangeNotifier {
   int get timerValue => _timerValue;
 
   TimerModel() {
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       _timerValue = _timerValue + 5;
 
       notifyListeners(); // Notify listeners that the timer has reached the specific point
@@ -25,10 +25,11 @@ class TimerModel extends ChangeNotifier {
 }
 
 class HomeElder extends StatefulWidget {
-  HomeElder({
+  const HomeElder({
     Key? key,
   }) : super(key: key);
 
+  @override
   _HomeElderState createState() => _HomeElderState();
 }
 
@@ -53,7 +54,7 @@ class _HomeElderState extends State<HomeElder> {
         );
         final difference = nowDate.difference(medicationDateTime);
 
-        if (difference > Duration(seconds: 30)) {
+        if (difference > const Duration(seconds: 30)) {
           if (med.color == Colors.yellow) {
             med.color = Colors.red;
           }
@@ -62,9 +63,10 @@ class _HomeElderState extends State<HomeElder> {
     });
   }
 
+  @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(seconds: 60), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 60), (timer) {
       updateColors();
     });
   }
@@ -95,16 +97,16 @@ class _HomeElderState extends State<HomeElder> {
     }
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              color: Color.fromARGB(255, 106, 144, 247),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              color: const Color.fromARGB(255, 106, 144, 247),
               child: Row(
                 children: [
-                  Text(
+                  const Text(
                     'Panel',
                     style: TextStyle(
                       color: Colors.white,
@@ -112,15 +114,15 @@ class _HomeElderState extends State<HomeElder> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   IconButton(
                       onPressed: () {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Confirmation'),
-                              content: Text('Are you sure you want to logout?'),
+                              title: const Text('Confirmation'),
+                              content: const Text('Are you sure you want to logout?'),
                               actions: [
                                 TextButton(
                                   onPressed: () {
@@ -129,23 +131,23 @@ class _HomeElderState extends State<HomeElder> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                LoginScreen())); // Close the dialog
+                                                const LoginScreen())); // Close the dialog
                                   },
-                                  child: Text('Yes'),
+                                  child: const Text('Yes'),
                                 ),
                                 TextButton(
                                   onPressed: () {
                                     // Perform action on cancel
                                     Navigator.pop(context); // Close the dialog
                                   },
-                                  child: Text('No'),
+                                  child: const Text('No'),
                                 ),
                               ],
                             );
                           },
                         );
                       },
-                      icon: Icon(Icons.logout),
+                      icon: const Icon(Icons.logout),
                       color: (Colors.white)),
                 ],
               ),
@@ -154,7 +156,7 @@ class _HomeElderState extends State<HomeElder> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text(
                 formattedDate,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color.fromARGB(255, 53, 53, 53),
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -170,7 +172,7 @@ class _HomeElderState extends State<HomeElder> {
                     med.date.year == selectedDate.year);
 
                 if (filteredMeds.isEmpty) {
-                  return Center(
+                  return const Center(
                     child: Text(
                       'No medications to display',
                       style: TextStyle(
@@ -199,7 +201,7 @@ class _HomeElderState extends State<HomeElder> {
                       return SizedBox(
                         height: 120,
                         child: Card(
-                          color: Color.fromARGB(255, 142, 167, 236),
+                          color: const Color.fromARGB(255, 142, 167, 236),
                           child: Row(
                             children: [
                               Padding(
@@ -223,26 +225,26 @@ class _HomeElderState extends State<HomeElder> {
                                     children: [
                                       Text(
                                         medication.name,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color:
                                               Color.fromARGB(255, 56, 56, 56),
                                           fontSize: 25,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       Text(
                                         'Dosage: ${medication.dosage}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 20,
                                           color:
                                               Color.fromARGB(255, 53, 52, 52),
                                         ),
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       Text(
                                         'Time: ${medication.time.hour}:${medication.time.minute}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 20,
                                           color:
                                               Color.fromARGB(255, 53, 52, 52),
@@ -313,23 +315,23 @@ class _HomeElderState extends State<HomeElder> {
                 }
               }),
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             Container(
               height: 90,
-              color: Color.fromARGB(255, 106, 144, 247),
+              color: const Color.fromARGB(255, 106, 144, 247),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
                     iconSize: 30,
-                    icon: Icon(Icons.call, color: Colors.white),
+                    icon: const Icon(Icons.call, color: Colors.white),
                     onPressed: () {},
                   ),
                   IconButton(
                     iconSize: 30,
-                    icon: Icon(Icons.message, color: Colors.white),
+                    icon: const Icon(Icons.message, color: Colors.white),
                     onPressed: () {},
                   ),
                 ],

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myapp/page-1/config_meds.dart';
 import 'package:provider/provider.dart';
 
 import 'check_meds.dart';
@@ -40,7 +39,7 @@ class Medication {
 }
 
 class MedicationData extends ChangeNotifier {
-  List<Medication> _medications = [];
+  final List<Medication> _medications = [];
 
   List<Medication> get medications => _medications;
 
@@ -53,7 +52,7 @@ class MedicationData extends ChangeNotifier {
 class AddMedsPage extends StatefulWidget {
   final DateTime selectedDate;
 
-  AddMedsPage({required this.selectedDate});
+  const AddMedsPage({super.key, required this.selectedDate});
   @override
   _AddMedsPageState createState() => _AddMedsPageState();
 }
@@ -65,14 +64,14 @@ class _AddMedsPageState extends State<AddMedsPage> {
   DateTime? _selectedDate;
   File? _selectedImage;
   TimeOfDay? _selectedTime;
-  Color? _medicationColor = Colors.yellow;
+  final Color _medicationColor = Colors.yellow;
   int _numberOfDays = 1;
 
   void _addMedication(BuildContext context, DateTime date) {
     final medicationData = Provider.of<MedicationData>(context, listen: false);
     final nextDays = List<DateTime>.generate(
       _numberOfDays,
-      (index) => widget.selectedDate!.add(Duration(days: index + 1)),
+      (index) => widget.selectedDate.add(Duration(days: index + 1)),
     );
 
     if (_formKey.currentState!.validate()) {
@@ -122,7 +121,7 @@ class _AddMedsPageState extends State<AddMedsPage> {
           height: 200,
           width: 200,
           color: Colors.grey,
-          child: Icon(
+          child: const Icon(
             Icons.add,
             size: 50,
             color: Colors.white,
@@ -130,7 +129,7 @@ class _AddMedsPageState extends State<AddMedsPage> {
         ),
       );
     } else {
-      return Container(
+      return SizedBox(
         height: 200,
         width: 200,
         child: Image.file(_selectedImage!),
@@ -138,13 +137,13 @@ class _AddMedsPageState extends State<AddMedsPage> {
     }
   }
 
-  List<int> _hoursList = List<int>.generate(24, (index) => index);
+  final List<int> _hoursList = List<int>.generate(24, (index) => index);
 
   Widget _buildTimeButton(int hour) {
     final isSelected = _selectedTime?.hour == hour;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ElevatedButton(
         onPressed: () {
           setState(() {
@@ -153,13 +152,13 @@ class _AddMedsPageState extends State<AddMedsPage> {
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
-            isSelected ? Color.fromARGB(255, 106, 144, 247) : Colors.grey,
+            isSelected ? const Color.fromARGB(255, 106, 144, 247) : Colors.grey,
           ),
           padding: MaterialStateProperty.all(
-            EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           ),
           textStyle: MaterialStateProperty.all(
-            TextStyle(fontSize: 18.0),
+            const TextStyle(fontSize: 18.0),
           ),
         ),
         child: Text('$hour:00'),
@@ -173,10 +172,10 @@ class _AddMedsPageState extends State<AddMedsPage> {
       child: Stack(
         children: [
           Scaffold(
-            backgroundColor: Color.fromARGB(255, 255, 255, 255),
+            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
             appBar: AppBar(
-              backgroundColor: Color.fromARGB(255, 106, 144, 247),
-              title: Text('Add Medication'),
+              backgroundColor: const Color.fromARGB(255, 106, 144, 247),
+              title: const Text('Add Medication'),
             ),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -186,10 +185,10 @@ class _AddMedsPageState extends State<AddMedsPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     _buildImagePreview(),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     TextFormField(
-                      style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                      decoration: InputDecoration(
+                      style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                      decoration: const InputDecoration(
                         labelText: 'Medication Name',
                         labelStyle:
                             TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
@@ -206,10 +205,10 @@ class _AddMedsPageState extends State<AddMedsPage> {
                         _medicationName = value;
                       },
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextFormField(
-                      style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                      decoration: InputDecoration(
+                      style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                      decoration: const InputDecoration(
                         labelText: 'Dosage',
                         labelStyle:
                             TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
@@ -226,11 +225,11 @@ class _AddMedsPageState extends State<AddMedsPage> {
                         _medicationDosage = value;
                       },
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
                         child: Row(
                           children: _hoursList
                               .map((hour) => _buildTimeButton(hour))
@@ -240,11 +239,11 @@ class _AddMedsPageState extends State<AddMedsPage> {
                     ),
                     Row(
                       children: [
-                        Text(
+                        const Text(
                           'Number of days: ',
                           style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         DropdownButton<int>(
                           value: _numberOfDays,
                           onChanged: (value) {
@@ -262,30 +261,29 @@ class _AddMedsPageState extends State<AddMedsPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: () {
                         if (_medicationName == null ||
                             _medicationDosage == null ||
                             _selectedTime == null ||
-                            _selectedImage == null ||
-                            _numberOfDays == null) {
+                            _selectedImage == null) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Error'),
-                                content: Text(
+                                title: const Text('Error'),
+                                content: const Text(
                                     'Por favor enter all the fields, including an image'),
                                 actions: <Widget>[
                                   ElevatedButton(
-                                    child: Text('OK'),
                                     style: ElevatedButton.styleFrom(
                                         backgroundColor:
-                                            Color.fromARGB(255, 106, 144, 247)),
+                                            const Color.fromARGB(255, 106, 144, 247)),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
+                                    child: const Text('OK'),
                                   ),
                                 ],
                               );
@@ -295,7 +293,7 @@ class _AddMedsPageState extends State<AddMedsPage> {
                         } else {
                           _addMedication(context, widget.selectedDate);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text('Medication added successfully'),
                               backgroundColor: Colors.green,
                               duration: Duration(seconds: 2),
@@ -305,8 +303,8 @@ class _AddMedsPageState extends State<AddMedsPage> {
                         // save medication info to database
                       },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 106, 144, 247)),
-                      child: Text('Save'),
+                          backgroundColor: const Color.fromARGB(255, 106, 144, 247)),
+                      child: const Text('Save'),
                     ),
                   ],
                 ),
@@ -319,34 +317,34 @@ class _AddMedsPageState extends State<AddMedsPage> {
             right: 0,
             child: Container(
               height: 60,
-              color: Color.fromARGB(255, 106, 144, 247),
+              color: const Color.fromARGB(255, 106, 144, 247),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.home, color: Colors.white),
+                    icon: const Icon(Icons.home, color: Colors.white),
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HomeCaretaker(),
+                          builder: (context) => const HomeCaretaker(),
                         ),
                       );
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.fact_check, color: Colors.white),
+                    icon: const Icon(Icons.fact_check, color: Colors.white),
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CheckMedsPage(),
+                          builder: (context) => const CheckMedsPage(),
                         ),
                       );
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.account_box, color: Colors.white),
+                    icon: const Icon(Icons.account_box, color: Colors.white),
                     onPressed: () {
                       // do something
                     },
