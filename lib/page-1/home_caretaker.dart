@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:myapp/page-1/check_meds.dart';
+import 'package:myapp/page-1/switch_elder.dart';
 import 'package:provider/provider.dart';
 
 import 'add_med.dart';
@@ -71,96 +72,141 @@ class _HomeCaretakerPage extends State<HomeCaretaker> {
     int missedMedicationCount = missedMedications.length;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 106, 144, 247),
+        title: Text('Home'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Confirmation'),
+                    content: const Text('Are you sure you want to logout?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          // Perform action on confirmation
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const LoginScreen())); // Close the dialog
+                        },
+                        child: const Text('Yes'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // Perform action on cancel
+                          Navigator.pop(context); // Close the dialog
+                        },
+                        child: const Text('No'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.logout),
+            color: _iconColor,
+          ),
+        ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 106, 144, 247),
+              ),
+              child: Image.asset(
+                'assets/page-1/images/logo_transparent.png', // Replace with your image path
+                width: 300,
+                height: 300,
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.account_box,
+              ),
+              title: const Text('Account'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.change_circle,
+              ),
+              title: const Text('Switch Elder'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Switch_Elder(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.settings,
+              ),
+              title: const Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.logout,
+              ),
+              title: const Text('Logout'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              color: const Color.fromARGB(255, 106, 144, 247),
-              child: Row(
-                children: [
-                  const Text(
-                    'Panel',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Confirmation'),
-                            content: const Text('Are you sure you want to logout?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  // Perform action on confirmation
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const LoginScreen())); // Close the dialog
-                                },
-                                child: const Text('Yes'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  // Perform action on cancel
-                                  Navigator.pop(context); // Close the dialog
-                                },
-                                child: const Text('No'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    icon: const Icon(Icons.logout),
-                    color: _iconColor,
-                  ),
-                ],
-              ),
-            ),
             const SizedBox(height: 10),
-             Padding(
+            Padding(
               padding: EdgeInsets.all(20),
               child: Column(
                 children: [
                   Row(
-              //mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                
-                SizedBox(width: 10), // Add a spacing of 10 pixels between the welcome message and the image
-                Image.asset(
-                  'assets/page-1/images/pill.jpg', // Replace with your image path
-                  width: 70,
-                  height: 100,
-                ),
-                Text(
-                  'Welcome, Mr.José!',
-                  style: TextStyle(fontSize: 24),
-                ),
-              ],
-            ),
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                          width:
+                              10), // Add a spacing of 10 pixels between the welcome message and the image
+                      Image.asset(
+                        'assets/page-1/images/pill.jpg', // Replace with your image path
+                        width: 70,
+                        height: 100,
+                      ),
+                      Text(
+                        'Welcome, Mr.José!',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ],
+                  ),
                   SizedBox(height: 10),
-                  
                   Text(
-                  'Below you can see your alerts and configure/check the medication associated with Mr. António',
-                  style: TextStyle(fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-                
+                    'Below you can see your alerts and configure/check the medication associated with Mr. António',
+                    style: TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
-                
               ),
-              
             ),
             if (missedMedicationCount > 0) ...[
               SingleChildScrollView(
@@ -201,7 +247,7 @@ class _HomeCaretakerPage extends State<HomeCaretaker> {
                   color: Colors.grey,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(
                       Icons.warning,
@@ -262,7 +308,8 @@ class _HomeCaretakerPage extends State<HomeCaretaker> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 106, 144, 247),
+                        backgroundColor:
+                            const Color.fromARGB(255, 106, 144, 247),
                         fixedSize: const Size(350, 70), // sets the minimum size
                         padding: const EdgeInsets.all(16), // sets the padding
                         shape: RoundedRectangleBorder(

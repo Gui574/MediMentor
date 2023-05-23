@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'check_meds.dart';
 import 'home_caretaker.dart';
+import 'login_screen.dart';
 
 class Medication {
   final String name;
@@ -174,8 +175,46 @@ class _AddMedsPageState extends State<AddMedsPage> {
           Scaffold(
             backgroundColor: const Color.fromARGB(255, 255, 255, 255),
             appBar: AppBar(
-              backgroundColor: const Color.fromARGB(255, 106, 144, 247),
-              title: const Text('Add Medication'),
+              backgroundColor: Color.fromARGB(255, 106, 144, 247),
+              title: Text('Add Medication'),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Confirmation'),
+                          content:
+                              const Text('Are you sure you want to logout?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                // Perform action on confirmation
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen())); // Close the dialog
+                              },
+                              child: const Text('Yes'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // Perform action on cancel
+                                Navigator.pop(context); // Close the dialog
+                              },
+                              child: const Text('No'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  icon: const Icon(Icons.logout),
+                  color: Colors.white,
+                ),
+              ],
             ),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -187,7 +226,8 @@ class _AddMedsPageState extends State<AddMedsPage> {
                     _buildImagePreview(),
                     const SizedBox(height: 40),
                     TextFormField(
-                      style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                      style:
+                          const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                       decoration: const InputDecoration(
                         labelText: 'Medication Name',
                         labelStyle:
@@ -207,7 +247,8 @@ class _AddMedsPageState extends State<AddMedsPage> {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
-                      style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                      style:
+                          const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                       decoration: const InputDecoration(
                         labelText: 'Dosage',
                         labelStyle:
@@ -278,8 +319,8 @@ class _AddMedsPageState extends State<AddMedsPage> {
                                 actions: <Widget>[
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            const Color.fromARGB(255, 106, 144, 247)),
+                                        backgroundColor: const Color.fromARGB(
+                                            255, 106, 144, 247)),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
@@ -303,7 +344,8 @@ class _AddMedsPageState extends State<AddMedsPage> {
                         // save medication info to database
                       },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 106, 144, 247)),
+                          backgroundColor:
+                              const Color.fromARGB(255, 106, 144, 247)),
                       child: const Text('Save'),
                     ),
                   ],

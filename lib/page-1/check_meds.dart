@@ -71,68 +71,51 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
     String formattedDate = dateFormat.format(selectedDate);
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 106, 144, 247),
+        title: Text('Check Medications'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Confirmation'),
+                    content: const Text('Are you sure you want to logout?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          // Perform action on confirmation
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const LoginScreen())); // Close the dialog
+                        },
+                        child: const Text('Yes'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // Perform action on cancel
+                          Navigator.pop(context); // Close the dialog
+                        },
+                        child: const Text('No'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.logout),
+            color: Colors.white,
+          ),
+        ],
+      ),
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              color: const Color.fromARGB(255, 106, 144, 247),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    color: Colors.white,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  const Text(
-                    'Check Medications',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Confirmation'),
-                              content: const Text('Are you sure you want to logout?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    // Perform action on confirmation
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const LoginScreen())); // Close the dialog
-                                  },
-                                  child: const Text('Yes'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // Perform action on cancel
-                                    Navigator.pop(context); // Close the dialog
-                                  },
-                                  child: const Text('No'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      icon: const Icon(Icons.logout),
-                      color: Colors.white),
-                ],
-              ),
-            ),
             TableCalendar(
               calendarFormat: _calendarFormat,
               onFormatChanged: (format) {
@@ -256,8 +239,8 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                   ),
-                                  minimumSize:
-                                      MaterialStateProperty.all(const Size(100, 40)),
+                                  minimumSize: MaterialStateProperty.all(
+                                      const Size(100, 40)),
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
                                           medication.color),
@@ -273,6 +256,27 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                   );
                 }
               }),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            AddMedsPage(selectedDate: selectedDate),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(150, 50),
+                    backgroundColor: const Color.fromARGB(255, 106, 144, 247),
+                  ),
+                  child: const Text('+ Add Medication'),
+                ),
+              ],
             ),
             const SizedBox(
               height: 50,
