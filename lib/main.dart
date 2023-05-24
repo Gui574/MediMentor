@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/page-1/add_elder.dart';
 import 'package:myapp/page-1/login_screen.dart';
 import 'package:myapp/page-1/home_elder.dart';
 import 'package:myapp/page-1/add_med.dart';
@@ -17,6 +18,9 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider<TimerModel>(
           create: (_) => TimerModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ElderData(),
         ),
       ],
       child: const MyApp(),

@@ -6,6 +6,7 @@ import 'package:myapp/page-1/home_caretaker.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import 'add_elder.dart';
 import 'add_med.dart';
 import 'login_screen.dart';
 
@@ -17,6 +18,7 @@ class CheckMedsPage extends StatefulWidget {
 }
 
 class _CheckMedsPageState extends State<CheckMedsPage> {
+  
   DateTime selectedDate = DateTime.now();
   late Timer _timer;
   CalendarFormat _calendarFormat = CalendarFormat.week;
@@ -151,7 +153,9 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                 final filteredMeds = medicationData.medications.where((med) =>
                     med.date.day == selectedDate.day &&
                     med.date.month == selectedDate.month &&
-                    med.date.year == selectedDate.year);
+                    med.date.year == selectedDate.year && med.elder.trim() == selectedElder.trim()
+                    );
+                print('NOMES $selectedElder');
                 if (filteredMeds.isEmpty) {
                   return const Center(
                     child: Text(

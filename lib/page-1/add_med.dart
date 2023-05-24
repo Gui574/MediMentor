@@ -2,11 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myapp/page-1/switch_elder.dart';
 import 'package:provider/provider.dart';
 
+import 'add_elder.dart';
 import 'check_meds.dart';
 import 'home_caretaker.dart';
 import 'login_screen.dart';
+
+
 
 class Medication {
   final String name;
@@ -15,6 +19,7 @@ class Medication {
   final File? image;
   final TimeOfDay time;
   Color color;
+  final String elder;
 
   Medication({
     required this.name,
@@ -23,6 +28,7 @@ class Medication {
     required this.image,
     required this.time,
     required this.color,
+    required this.elder
   });
 
   bool equals(Medication med) {
@@ -84,6 +90,7 @@ class _AddMedsPageState extends State<AddMedsPage> {
         color: Colors.yellow,
         image: _selectedImage,
         time: _selectedTime!,
+        elder: selectedElder
       );
       medicationData.addMedication(nextMedication);
 
@@ -95,6 +102,7 @@ class _AddMedsPageState extends State<AddMedsPage> {
           color: Colors.yellow,
           image: _selectedImage,
           time: _selectedTime!,
+          elder: selectedElder
         );
         medicationData.addMedication(nextMedication);
       }

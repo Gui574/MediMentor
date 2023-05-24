@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,109 +7,88 @@ import 'package:myapp/page-1/home_caretaker.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import 'add_elder.dart';
 import 'add_med.dart';
 import 'check_meds.dart';
 import 'login_screen.dart';
 
-class Switch_Elder extends StatelessWidget {
-  final List<String> elders = [
-    'António',
-    'Elder 2',
-    'Elder 3',
-    // Add more elders as needed
-  ];
 
+class Switch_Elder extends StatelessWidget {
+
+  String formatFirstWord(String input) {
+  if (input.isEmpty) {
+    return input;
+  }
+  final List<String> words = input.split(' ');
+  if (words.isEmpty) {
+    return input;
+  }
+  final String firstWord = words[0];
+  final String formattedFirstWord = '${firstWord[0].toUpperCase()}${firstWord.substring(1)}';
+  words[0] = formattedFirstWord;
+  return words[0];
+}
+  
   @override
   Widget build(BuildContext context) {
+    final List<Elder> elders = Provider.of<ElderData>(context).elders;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 106, 144, 247),
-        title: Text('Check Medications'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Confirmation'),
-                    content: const Text('Are you sure you want to logout?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          // Perform action on confirmation
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text('Yes'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Perform action on cancel
-                          Navigator.pop(context); // Close the dialog
-                        },
-                        child: const Text('No'),
-                      ),
-                    ],
-                  );
-                },
+        title: Text('Select Elder'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Add_ElderPage()),
+          );
+        },
+        child: Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: GridView.builder(
+        padding: EdgeInsets.all(16.0),
+        itemCount: elders.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16.0,
+          mainAxisSpacing: 16.0,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          final Elder elder = elders[index];
+          return GestureDetector(
+            onTap: () {
+              selectedElder = formatFirstWord(elder.name) ;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeCaretaker(),
+                ),
               );
             },
-            icon: const Icon(Icons.logout),
-            color: Colors.white,
-          ),
-        ],
-      ),
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      body: SafeArea(
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // Number of columns in the grid
-            childAspectRatio: 1.0, // Adjust the aspect ratio to fit your needs
-          ),
-          itemCount: elders.length,
-          itemBuilder: (context, index) {
-            final elder = elders[index];
-
-            return GestureDetector(
-              onTap: () {
-                // Handle selection of elder
-                // You can navigate to a new page or perform any desired action
-              },
-              child: Container(
-                margin: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Image.asset(
-                        'assets/page-1/images/antonio.jpg', // Replace with the image path for the elder
-                        fit: BoxFit.cover,
-                      ),
+            child: Card(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Image.file(
+                      elder.image!,
+                      fit: BoxFit.cover,
                     ),
-                    SizedBox(height: 10),
-                    Text(
-                      elder,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(elder.name),
+                  ),
+                ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
+        
       ),
+      
     );
   }
 }
