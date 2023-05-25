@@ -6,6 +6,7 @@ import 'package:googleapis/classroom/v1.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/page-1/home_caretaker.dart';
+import 'package:myapp/page-1/login_logic.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -45,18 +46,12 @@ class ElderData extends ChangeNotifier {
   }
 }
 
-
-
 class Add_ElderPage extends StatefulWidget {
   @override
   _Add_ElderPageState createState() => _Add_ElderPageState();
-
 }
 
-class _Add_ElderPageState extends State<Add_ElderPage>{
-
-
-
+class _Add_ElderPageState extends State<Add_ElderPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
@@ -72,17 +67,28 @@ class _Add_ElderPageState extends State<Add_ElderPage>{
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
 
-    if (name.isNotEmpty && age > 0 && gender.isNotEmpty && _selectedImage != null) {
+    if (name.isNotEmpty &&
+        age > 0 &&
+        gender.isNotEmpty &&
+        _selectedImage != null) {
       //String imagePath = _selectedImage!.path;
-      Elder elder = Elder(name: name, age: age, gender: gender, image: _selectedImage,username: username
-      ,password: password);
+      Elder elder = Elder(
+          name: name,
+          age: age,
+          gender: gender,
+          image: _selectedImage,
+          username: username,
+          password: password);
       Provider.of<ElderData>(context, listen: false).addElder(elder);
+      Login login = Login(username, password);
+      logins.add(login);
       Navigator.pop(context); // Go back to the previous page
     }
   }
 
   Future<void> _selectImage() async {
-    final XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
+    final XFile? image =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
         _selectedImage = File(image.path);
@@ -141,47 +147,46 @@ class _Add_ElderPageState extends State<Add_ElderPage>{
               SizedBox(height: 16.0),
             ],
             ElevatedButton(
-              onPressed: () { 
+              onPressed: () {
                 if (_nameController.text.trim() == null ||
-                            int.tryParse(_ageController.text.trim()) == null ||
-                            _genderController.text.trim() == null ||
-                            _selectedImage == null ||
-                            _usernameController.text.trim() == null ||
-                            _passwordController.text.trim() == null
-                            ) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Error'),
-                                content: const Text(
-                                    'Please enter all the fields, including an image'),
-                                actions: <Widget>[
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color.fromARGB(
-                                            255, 106, 144, 247)),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              );
+                    int.tryParse(_ageController.text.trim()) == null ||
+                    _genderController.text.trim() == null ||
+                    _selectedImage == null ||
+                    _usernameController.text.trim() == null ||
+                    _passwordController.text.trim() == null) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Error'),
+                        content: const Text(
+                            'Please enter all the fields, including an image'),
+                        actions: <Widget>[
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 106, 144, 247)),
+                            onPressed: () {
+                              Navigator.of(context).pop();
                             },
-                          );
-                          return;
-                        } else {
-                          _addElder(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Elder profile created successfully'),
-                              backgroundColor: Colors.green,
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        }},
-                
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                } else {
+                  _addElder(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Elder profile created successfully'),
+                      backgroundColor: Colors.green,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+              },
               child: Text('Add Elder'),
             ),
           ],

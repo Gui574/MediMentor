@@ -185,37 +185,81 @@ class _HomeCaretakerPageState extends State<HomeCaretaker> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 10),
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  Row(
-                    //mainAxisAlignment: MainAxisAlignment.center,
+            if (selectedElder != '') ...[
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Row(
+                      //mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                            width:
+                                10), // Add a spacing of 10 pixels between the welcome message and the image
+                        Image.asset(
+                          'assets/page-1/images/pill.jpg', // Replace with your image path
+                          width: 70,
+                          height: 100,
+                        ),
+                        Text(
+                          'Welcome, Mr.$selectedElder !',
+                          style: TextStyle(fontSize: 24),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Below you can see your alerts and configure/check the medication associated with Mr. $selectedElder',
+                      style: TextStyle(fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            if (selectedElder == '') ...[
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                          width:
-                              10), // Add a spacing of 10 pixels between the welcome message and the image
-                      Image.asset(
-                        'assets/page-1/images/pill.jpg', // Replace with your image path
-                        width: 70,
-                        height: 100,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.warning,
+                            size: 30,
+                            color: Color.fromARGB(255, 26, 26, 26),
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            'Please select or create an elder profile',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'Welcome, Mr.$selectedElder !',
-                        style: TextStyle(fontSize: 24),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Switch_Elder(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(150, 50),
+                          backgroundColor:
+                              const Color.fromARGB(255, 106, 144, 247),
+                        ),
+                        child: Text('Select Elder Profile'),
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Below you can see your alerts and configure/check the medication associated with Mr. $selectedElder',
-                    style: TextStyle(fontSize: 16),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                ),
               ),
-            ),
-            if (missedMedicationCount > 0 && !isElderListEmpty) ...[
+            ] else if (missedMedicationCount > 0) ...[
               SingleChildScrollView(
                 child: Container(
                   margin: const EdgeInsets.all(20),
@@ -234,7 +278,7 @@ class _HomeCaretakerPageState extends State<HomeCaretaker> {
                       Expanded(
                         child: Center(
                           child: Text(
-                            'Mr. António missed  $missedMedicationCount medications today! Go to Check Medications to view them',
+                            'Mr. António missed $missedMedicationCount medications today! Go to Check Medications to view them',
                             style: const TextStyle(
                               color: Color.fromARGB(255, 255, 0, 0),
                               fontSize: 18,
@@ -245,11 +289,6 @@ class _HomeCaretakerPageState extends State<HomeCaretaker> {
                     ],
                   ),
                 ),
-              )
-            ] else if (isElderListEmpty) ...[
-              const Text(
-                'No elder found, please select or create an elder profile',
-                style: TextStyle(fontSize: 18),
               ),
             ] else ...[
               Container(
@@ -277,70 +316,42 @@ class _HomeCaretakerPageState extends State<HomeCaretaker> {
                 ),
               ),
             ],
-            if (!isElderListEmpty) ...[
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const CheckMedsPage()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          fixedSize: const Size(350, 70),
-                          padding: const EdgeInsets.all(16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          backgroundColor: missedMedicationCount > 0
-                              ? Colors.red
-                              : Colors.green,
-                        ),
-                        child: Text(
-                          'Check Medications   ->',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: missedMedicationCount > 0
-                                ? Colors.white
-                                : const Color.fromARGB(255, 255, 255, 255),
-                          ),
-                        ),
+            if (selectedElder != '') ...[
+              Column(
+                children: [
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CheckMedsPage()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      fixedSize: const Size(350, 70),
+                      padding: const EdgeInsets.all(16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      const SizedBox(height: 30),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ConfigMedsPage()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 106, 144, 247),
-                          fixedSize: const Size(350, 70), // sets the minimum size
-                          padding: const EdgeInsets.all(16), // sets the padding
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                20), // sets the border radius
-                          ),
-                        ),
-                        child: const Text('Configurate Medications   ->',
-                            style: TextStyle(fontSize: 20)),
+                      backgroundColor:
+                          missedMedicationCount > 0 ? Colors.red : Colors.green,
+                    ),
+                    child: Text(
+                      'Check Medications   ->',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: missedMedicationCount > 0
+                            ? Colors.white
+                            : const Color.fromARGB(255, 255, 255, 255),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 30),
+                ],
               ),
             ],
-            const SizedBox(
-              height: 50,
-            ),
+            const Spacer(),
             Container(
               height: 70,
               color: const Color.fromARGB(255, 106, 144, 247),
@@ -380,5 +391,7 @@ class _HomeCaretakerPageState extends State<HomeCaretaker> {
             ),
           ],
         ),
-      ));
-  }}
+      ),
+    );
+  }
+}

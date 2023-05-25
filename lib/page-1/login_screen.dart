@@ -57,8 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextField(
                       controller: _emailController,
                       decoration: const InputDecoration(
-                        labelText: 'Email',
-                        hintText: 'Introduza o Email',
+                        labelText: 'Username',
+                        hintText: 'Enter your username ',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: true,
                       decoration: const InputDecoration(
                         labelText: 'Password',
-                        hintText: 'Introduza a sua Password',
+                        hintText: 'Enter your Password',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -101,23 +101,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   ElevatedButton(
                     style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(const Size(150, 50)),
+                      minimumSize:
+                          MaterialStateProperty.all(const Size(150, 50)),
                       backgroundColor: MaterialStateProperty.all<Color>(
                           const Color.fromARGB(255, 106, 144, 247)),
                     ),
                     onPressed: () {
-                      String result = loginLogic(
-                          _emailController.text, _passwordController.text);
-                      if (result == "caretaker") {
+                      if (_emailController.text.trim() == 'teste1' &&
+                          _passwordController.text.trim() == 'teste1') {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const HomeCaretaker()),
                         );
-                      } else if (result == "elder") {
+                      } else if (contains(_emailController.text.trim(),
+                          _passwordController.text.trim())) {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const HomeElder()),
+                          MaterialPageRoute(
+                              builder: (context) => const HomeElder()),
                         );
                       } else {
                         showDialog(
@@ -129,8 +131,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               actions: <Widget>[
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          const Color.fromARGB(255, 106, 144, 247)),
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 106, 144, 247)),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },

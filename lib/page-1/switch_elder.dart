@@ -12,23 +12,22 @@ import 'add_med.dart';
 import 'check_meds.dart';
 import 'login_screen.dart';
 
-
 class Switch_Elder extends StatelessWidget {
-
   String formatFirstWord(String input) {
-  if (input.isEmpty) {
-    return input;
+    if (input.isEmpty) {
+      return input;
+    }
+    final List<String> words = input.split(' ');
+    if (words.isEmpty) {
+      return input;
+    }
+    final String firstWord = words[0];
+    final String formattedFirstWord =
+        '${firstWord[0].toUpperCase()}${firstWord.substring(1)}';
+    words[0] = formattedFirstWord;
+    return words[0];
   }
-  final List<String> words = input.split(' ');
-  if (words.isEmpty) {
-    return input;
-  }
-  final String firstWord = words[0];
-  final String formattedFirstWord = '${firstWord[0].toUpperCase()}${firstWord.substring(1)}';
-  words[0] = formattedFirstWord;
-  return words[0];
-}
-  
+
   @override
   Widget build(BuildContext context) {
     final List<Elder> elders = Provider.of<ElderData>(context).elders;
@@ -39,6 +38,7 @@ class Switch_Elder extends StatelessWidget {
         title: Text('Select Elder'),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color.fromARGB(255, 106, 144, 247),
         onPressed: () {
           Navigator.push(
             context,
@@ -60,7 +60,7 @@ class Switch_Elder extends StatelessWidget {
           final Elder elder = elders[index];
           return GestureDetector(
             onTap: () {
-              selectedElder = formatFirstWord(elder.name) ;
+              selectedElder = formatFirstWord(elder.name);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -86,9 +86,7 @@ class Switch_Elder extends StatelessWidget {
             ),
           );
         },
-        
       ),
-      
     );
   }
 }
