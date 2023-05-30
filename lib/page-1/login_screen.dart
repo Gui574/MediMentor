@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/page-1/home_caretaker.dart';
 import 'package:myapp/page-1/home_elder.dart';
 import 'login_logic.dart';
+import 'switch_elder.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
@@ -109,14 +110,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       if (_emailController.text.trim() == 'teste1' &&
                           _passwordController.text.trim() == 'teste1') {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const HomeCaretaker()),
+                              builder: (context) =>  Switch_Elder()),
                         );
                       } else if (contains(_emailController.text.trim(),
                           _passwordController.text.trim())) {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const HomeElder()),

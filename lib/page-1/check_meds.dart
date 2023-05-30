@@ -9,6 +9,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'add_elder.dart';
 import 'add_med.dart';
 import 'login_screen.dart';
+import 'switch_elder.dart';
 
 class CheckMedsPage extends StatefulWidget {
   const CheckMedsPage({super.key});
@@ -236,6 +237,9 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                                   ),
                                 ),
                               ),
+                              Padding(
+  padding: EdgeInsets.symmetric(horizontal: 16), // Adjust the horizontal spacing as needed
+  child:
                               ElevatedButton(
                                 style: ButtonStyle(
                                   shape: MaterialStateProperty.all(
@@ -251,7 +255,7 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                                 ),
                                 onPressed: () {},
                                 child: Text(taken),
-                              ),
+                              ),)
                             ],
                           ),
                         ),
@@ -261,10 +265,12 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                 }
               }),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
+            Padding(
+  padding: EdgeInsets.symmetric(horizontal: 16), // Adjust the horizontal spacing as needed
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      ElevatedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -280,8 +286,11 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                   ),
                   child: const Text('+ Add Medication'),
                 ),
-              ],
-            ),
+    ],
+  ),
+),
+
+            
             const SizedBox(
               height: 50,
             ),
@@ -311,7 +320,12 @@ class _CheckMedsPageState extends State<CheckMedsPage> {
                   IconButton(
                     icon: const Icon(Icons.account_box, color: Colors.white),
                     onPressed: () {
-                      // do something
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>  Switch_Elder(),
+                        ),
+                      );
                     },
                   ),
                 ],

@@ -47,7 +47,7 @@ class Switch_Elder extends StatelessWidget {
         },
         child: Icon(Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: GridView.builder(
         padding: EdgeInsets.all(16.0),
         itemCount: elders.length,

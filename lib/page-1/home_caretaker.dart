@@ -381,9 +381,14 @@ class _HomeCaretakerPageState extends State<HomeCaretaker> {
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.medication, color: Colors.white),
+                    icon: const Icon(Icons.account_box, color: Colors.white),
                     onPressed: () {
-                      // do something
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>  Switch_Elder(),
+                        ),
+                      );
                     },
                   ),
                 ],

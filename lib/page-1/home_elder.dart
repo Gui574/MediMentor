@@ -277,7 +277,7 @@ class _HomeElderState extends State<HomeElder> {
                                       : medicationData
                                                   .medications[match].color ==
                                               Colors.yellow
-                                          ? Icons.question_mark_rounded
+                                          ? Icons.timer_outlined
                                           : Icons.check_box,
                                   color:
                                       medicationData.medications[match].color,
@@ -310,6 +310,7 @@ class _HomeElderState extends State<HomeElder> {
                           ),
                         ),
                       );
+
                     },
                   );
                 }
